@@ -200,7 +200,8 @@ footer{
 
 .form-wrapper{
   /*  background: #883322; */
-    background: rgba(33, 44, 44, 0.8);
+  /*  background: rgba(33, 44, 44, 0.8); */
+    background: #3c3c3c;
     padding: 15px;
     display: block;
     color: #ffffff;
@@ -209,3 +210,8 @@ footer{
 a.edit-link .label, a.delete-link .label{
     cursor: pointer;
 }
+
+.op-message{
+    margin-top: 10px;
+}
+
