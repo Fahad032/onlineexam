@@ -140,7 +140,7 @@ class MysqlConnection
 
     public function delete($id, $table){
 
-        $this->mysqli->query("DELETE FROM subjects WHERE id = 10");
+        $this->mysqli->query("DELETE FROM subjects WHERE id = $id");
 
         if($this->mysqli->affected_rows > 0){
             return true;
