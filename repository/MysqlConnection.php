@@ -28,9 +28,17 @@ class MysqlConnection
     }
 
 
-    public function getAll($table){
+    public function getAll($table, $condition = null){
 
-        $query = $this->mysqli->query("SELECT * FROM $table");
+        $sql = "SELECT * FROM $table";
+
+        if($condition != null){
+
+        $sql .= $this->_buildCondition($condition);
+
+        }
+
+        $query = $this->mysqli->query($sql);
 
         $results = [];
 
@@ -40,6 +48,37 @@ class MysqlConnection
 
         return $results;
 
+
+    }
+
+
+
+    protected function _buildCondition($condition){
+
+        $sql = ' WHERE ';
+
+        if(is_string($condition)){
+
+            $sql.= $condition;
+
+        }
+
+        if(is_array($condition)){
+
+            $key_count = count($condition);
+
+            foreach($condition as $key => $val){
+
+
+                $sql .= $key . ' = "' . $val . '"';
+
+                (--$key_count > 0) ? ($sql .= ' && ') : '';
+
+            }
+
+        }
+
+        return $sql;
 
     }
 
@@ -140,7 +179,7 @@ class MysqlConnection
 
     public function delete($id, $table){
 
-        $this->mysqli->query("DELETE FROM subjects WHERE id = $id");
+        $this->mysqli->query("DELETE FROM $table WHERE id = $id");
 
         if($this->mysqli->affected_rows > 0){
             return true;

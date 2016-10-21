@@ -1,1 +1,58 @@
 <p>Some content on partial sub-included-template</p>
+
+
+
+public function getAll($table, $condition = null){
+
+$sql = "SELECT * FROM $table";
+/*
+if($condition != null){
+
+$sql .= $this->_buildCondition($condition);
+
+}
+*/
+// print_r($sql);
+
+$query = $this->mysqli->query("SELECT * FROM subjects");
+
+$results = [];
+
+while($fetched_row = $query->fetch_object()){
+$results[] = $fetched_row;
+}
+
+return $results;
+
+
+}
+
+
+protected function _buildCondition($condition){
+
+$sql = ' WHERE ';
+
+if(is_string($condition)){
+
+$sql.= $condition;
+
+}
+
+if(is_array($condition)){
+
+$key_count = count($condition);
+
+foreach($condition as $key => $val){
+
+
+$sql .= $key . ' = "' . $val . '"';
+
+(--$key_count > 0) ? ($sql .= ' && ') : '';
+
+}
+
+}
+
+return $sql;
+
+}

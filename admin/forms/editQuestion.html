@@ -8,12 +8,12 @@
     <div class="clearfix"></div>
 
 
-    <form name="editQuestion" novalidate class="form-inline" id="editQuestion" ng-submit="editQuestion.$valid && subjectCtrl.updateQuestion(subjectCtrl.questionIndex);">
+    <form name="editQuestion" novalidate class="form-inline" id="editQuestion" ng-submit="editQuestion.$valid && updateQuestion(questionIndex);">
         <div class="form-group col-sm-12"
              ng-class="{ 'has-error': editQuestion.question_title.$touched && editQuestion.question_title.$invalid}">
             <div class="input-group">
                 <input type="text"
-                       ng-model="subjectCtrl.question_title"
+                       ng-model="question_title"
                        required
                        ng-minlength="10"
                        name="question_title"

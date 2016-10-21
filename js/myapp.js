@@ -209,50 +209,65 @@ app.controller('subjectArea',["$scope","$http", "$q", function($scope, $http, $q
 
 
 
-    /* Questions */
 
+    /******************************************************/
+    /*	Question Operations */
+    /******************************************************/
 
+    $scope.question_subject_id = 30;
 
     $scope.questions = [
-        {
-            subject_id: 1, // will retrive the questions using the subject id later on
-            question_id: 1,
-            title: "What Does SDLC Mean"
-        },
-        {
-            subject_id: 1,
-            question_id: 1,
-            title: "How much steps are there in a SDLC"
-        },
-        {
-            subject_id: 1,
-            question_id: 1,
-            title: "What is the largest step in SDLC"
-        },
-        {
-            subject_id: 1,
-            question_id: 1,
-            title: "What is the most important step in SDLC"
-        }
 
     ];
 
+
+    // get question from the database
+
+    $http.get('question_management.php').success(function(data){
+
+        if(data.length > 0) {
+
+            $scope.questions = data;
+
+        }
+
+    }).error(function(){
+
+    });
+
+
+
+
     $scope.addQuestion = function(){
 
-        $scope.questions.push({
-            subject_id: 1,
-            question_id: 1,
-            title: $scope.question_title
+        var questionObj = {
+            id: '',
+            subject_id: $scope.question_subject_id,
+            title: $scope.question_title,
+            _caller: 'insert'
+        };
+
+        // store in the database first
+
+        $http.post('question_management.php', questionObj).success(function(data){
+
+            if(data.success){
+                questionObj.id = data.id;
+                $scope.questions.push(questionObj);
+                $scope.question_title = '';
+                $scope.messageSuccess('Successfully Added !');
+
+            }else{
+                $scope.messageError();
+            }
+
+        }).error(function(err){
+
         });
 
-        $scope.question_title = '';
-
-        $scope.message.success = true;
-        $scope.message.text = "Successfully Added !";
-
-       // messageSuccess();
-
     };
+
+    /* edit question */
 
     $scope.editQuestion = function($index){
 
@@ -264,24 +279,56 @@ app.controller('subjectArea',["$scope","$http", "$q", function($scope, $http, $q
 
     $scope.updateQuestion = function($index){
 
-        $scope.questions[$index] = {
-            subject_id: $scope.questions[$index].subject_id,
-            question_id: $scope.questions[$index].question_id,
-            title: $scope.question_title
+        var questionObj = {
+                id: $scope.questions[$index].id,
+                title: $scope.question_title,
+                _caller: 'update'
+            };
 
-        };
+        $http.post('question_management.php', questionObj).success(function(data){
 
-        $scope.showEditForm = false;
-        $scope.question_title = '';
+            if(data.success){
 
-        $scope.message.success = true;
-        $scope.message.text = "Successfully Updated !";
+                $scope.questions[$index] = questionObj;
+                $scope.showEditForm = false;
+                $scope.question_title = '';
+                $scope.messageSuccess("Successfully Updated !");
 
-        // messageSuccess();
+            }else{
+
+                $scope.messageError();
+
+            }
+
+
+        }).error(function(err){
+
+        });
+
 
     };
 
     $scope.deleteQuestion = function($index){
+
+        // delete the database record first
+
+        console.log($scope.questions[$index].id);
+        var questionObj = {
+            id: $scope.questions[$index].id,
+            _caller: 'delete'
+        }
+
+        $http.post('question_management.php', questionObj).success(function(data){
+
+            if(data.success){
+                $scope.messageSuccess('Successfully Deleted !');
+            }else{
+                $scope.messageError();
+            }
+
+        }).error(function(err){
+
+        });
 
         $scope.questions.splice($index, 1);
 

@@ -11,15 +11,15 @@
 
 
     <form name="add_question" novalidate class="form-inline" id="add_question"
-          ng-submit="add_question.$valid && subjectCtrl.addQuestion();">
+          ng-submit="add_question.$valid && addQuestion();">
         <div class="form-group col-sm-12"
              ng-class="{ 'has-error': add_question.question_title.$touched && add_question.question_title.$invalid}">
             <div class="input-group">
                 <input type="text"
-                       ng-model="subjectCtrl.question_title"
+                       ng-model="question_title"
                        required
                        ng-minlength="10"
-                       name="question_title"
+                       name="q_title"
                        class="form-control input-sm"
                        style="width:100%;" placeholder="Question"/>
                 <div class="input-group-addon" style="padding: 0; border: 0;">

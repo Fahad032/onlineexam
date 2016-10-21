@@ -1,0 +1,33 @@
+<div class="form-wrapper" ng-show="showEditForm">
+
+    <div class="box-title">
+        <span class="headline">Edit Subject</span>
+    </div>
+    <div class="clearfix"></div>
+    <hr class="alt">
+    <div class="clearfix"></div>
+
+
+    <form class="form-inline" id="edit-subject" ng-submit="updateSubject(updateIndex);">
+        <div class="form-group">
+            <input type="text" name="subject_name" required ng-model="subject_name" class="form-control input-sm" placeholder="Subject Name" />
+        </div>
+        <div class="form-group">
+            <input type="text" name="subject_scale" required  ng-model="subject_scale" class="form-control input-sm" placeholder="Scale / Grade" />
+        </div>
+        <div class="form-group">
+            <input type="text" name="total_question" required  ng-model="total_question" class="form-control input-sm" placeholder="Total question" />
+        </div>
+        <div class="form-group">
+            <input type="text" name="test_duration" required  ng-model="test_duration" class="form-control input-sm" placeholder="Duration in min" />
+        </div>
+        <div class="form-group">
+            <input type="submit" name="add_subject" class="btn btn-sm btn-success" value="Update" />
+        </div>
+
+
+
+    </form>
+    <div class="clearfix"></div>
+
+</div>

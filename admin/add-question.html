@@ -82,14 +82,18 @@
                             </thead>
 
                             <tbody>
-                            <tr ng-repeat="question in subjectCtrl.questions">
+                            <tr ng-if="questions.length" ng-repeat="question in questions">
                                 <td>{{ $index+1 }}</td>
                                 <td><a href="#" title="Add Answer">{{ question.title }} ?</a></td>
                                 <td>
-                                    <a href="#" class="edit-link text-primary"><label class="label label-primary"><span class="fa fa-graduation-cap"></span> Answer Options</label></a>
-                                    <a href="#" class="edit-link text-primary" ng-click="subjectCtrl.editQuestion($index);"><label class="label label-info"><span class="fa fa-pencil"></span> Edit</label></a>
-                                    <a href="#" class="delete-link text-danger" ng-click="subjectCtrl.deleteQuestion($index);"><label class="label label-danger"><span class="fa fa-trash-o"></span> Delete</label></a>
+                                    <a class="edit-link text-primary"><label class="label label-primary"><span class="fa fa-graduation-cap"></span> Answer Options</label></a>
+                                    <a class="edit-link text-primary" ng-click="editQuestion($index);"><label class="label label-info"><span class="fa fa-pencil"></span> Edit</label></a>
+                                    <a class="delete-link text-danger" ng-click="deleteQuestion($index);"><label class="label label-danger"><span class="fa fa-trash-o"></span> Delete</label></a>
                                 </td>
+                            </tr>
+                            <tr ng-if="!questions.length">
+                                <td colspan="3"> <h4 class="text-muted text-center">---- There is no question yet ! ----</h4></td>
+
                             </tr>
 
                             </tbody>
@@ -113,7 +117,53 @@
 
                         <!-- add-question-form -->
 
-                        <div  ng-hide="subjectCtrl.showEditForm" ng-include="'forms/addQuestion.html'">
+                       <!-- <div  ng-hide="showEditForm" ng-include="'forms/addQuestion.html'">
+                        </div> -->
+
+                        <div class="form-wrapper" ng-hide="showEditForm" >
+
+                            <div class="box-title">
+                                <span class="headline">Add New Question</span>
+
+                                <span class="pull-right" ng-include="'action-message.html'"></span>
+
+                            </div>
+                            <div class="clearfix"></div>
+                            <hr class="alt">
+                            <div class="clearfix"></div>
+
+
+                            <form name="add_question" novalidate class="form-inline" id="add_question"
+                                  ng-submit="add_question.$valid && addQuestion();">
+                                <div class="form-group col-sm-12"
+                                     ng-class="{ 'has-error': add_question.question_title.$touched && add_question.question_title.$invalid}">
+                                    <div class="input-group">
+                                        <input type="text"
+                                               ng-model="question_title"
+                                               required
+                                               ng-minlength="10"
+                                               name="q_title"
+                                               class="form-control input-sm"
+                                               style="width:100%;" placeholder="Question"/>
+                                        <div class="input-group-addon" style="padding: 0; border: 0;">
+                                            <input type="submit" name="submit_question" class="btn btn-sm btn-success"
+                                                   value="Add Question"/>
+
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="help-block"
+                                         ng-messages="add_question.question_title.$error"
+                                         ng-if="add_question.question_title.$touched">
+
+                                        <div ng-messages-include="error-messages.html"></div>
+
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </form>
+                            <div class="clearfix"></div>
+
                         </div>
 
                         <!-- /add-question-form -->
@@ -122,7 +172,47 @@
 
                         <!-- editQuestion form -->
 
-                        <div  ng-show="subjectCtrl.showEditForm" ng-include="'forms/editQuestion.html'"></div>
+                       <!-- <div  ng-show="showEditForm" ng-include="'forms/editQuestion.html'"></div> -->
+                        <div class="form-wrapper" ng-show="showEditForm">
+
+                            <div class="box-title">
+                                <span class="headline">Edit Question</span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <hr class="alt">
+                            <div class="clearfix"></div>
+
+
+                            <form name="edit_question" novalidate class="form-inline" id="edit_question" ng-submit="edit_question.$valid && updateQuestion(questionIndex);">
+                                <div class="form-group col-sm-12"
+                                     ng-class="{ 'has-error': edit_question.question_title.$touched && edit_question.question_title.$invalid}">
+                                    <div class="input-group">
+                                        <input type="text"
+                                               ng-model="question_title"
+                                               required
+                                               ng-minlength="10"
+                                               name="question_title"
+                                               class="form-control input-sm"
+                                               style="width:100%;" placeholder="Question" />
+                                        <div class="input-group-addon" style="padding: 0; border: 0;">
+                                            <input type="submit" name="submit_question" class="btn btn-sm btn-success" value="Update" />
+
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="help-block"
+                                         ng-messages="edit_question.question_title.$error"
+                                         ng-if="edit_question.question_title.$touched">
+
+                                        <div ng-messages-include="error-messages.html"></div>
+
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </form>
+                            <div class="clearfix"></div>
+
+                        </div>
 
 
                         <!-- / editQuestion form -->
