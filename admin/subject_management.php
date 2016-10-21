@@ -12,7 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST)){
 
 }
 
-if( isset($_POST['_caller']) == 'insert'){
+// INSERT A NEW SUBJECT
+
+if( isset($_POST['_caller']) && $_POST['_caller'] == 'insert'){
 
     $subject = [
         'title' => $_POST['title'],
@@ -30,6 +32,45 @@ if( isset($_POST['_caller']) == 'insert'){
     exit(json_encode(['success' => FALSE]));
 
 }
+
+
+// DELETE A SUBJECT RECORDS
+
+if(isset($_POST['_caller']) && $_POST['_caller'] == 'delete'){
+
+    if($subjects->destroy($_POST['id'])){
+
+        exit(json_encode(['success' => TRUE]));
+
+    }
+
+    exit(json_encode(['success' => FALSE]));
+
+
+}
+
+// UPDATE AN EXISTING SUBJECT RECORDS
+
+if(isset($_POST['_caller']) && $_POST['_caller'] == 'update'){
+
+    $subject = [
+        'title' => $_POST['title'],
+        'test_duration' => $_POST['test_duration'],
+        'scale' => $_POST['scale'],
+        'total_question' => $_POST['total_question']
+    ];
+
+    if($subjects->update($_POST['id'], $subject)){
+
+        exit(json_encode(['success' => TRUE]));
+
+    }
+
+    exit(json_encode(['success' => FALSE]));
+
+
+}
+
 
 exit($subjects->index());
 

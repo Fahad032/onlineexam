@@ -76,12 +76,15 @@ class Subject extends MysqlConnection
      */
     public function update($id, $update_array){
 
-        if(parent::updateRow($id, $update_array, $this->table)){
+       /* if(parent::updateRow($id, $update_array, $this->table)){
 
-            return json_encode($this->get($id, $this->table));
+           // return json_encode($this->get($id, $this->table));
+            return true;
 
         }
+       */
 
+        return parent::updateRow($id, $update_array, $this->table);
 
     }
 
@@ -92,8 +95,7 @@ class Subject extends MysqlConnection
      */
     public function destroy($id){
 
-        $this->delete($id, $this->table);
-
+       return $this->delete($id, $this->table);
 
     }
 

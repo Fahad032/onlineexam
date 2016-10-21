@@ -15,32 +15,45 @@ app.controller('loginRegisterController', ["$scope", function($scope){
 }]);
 */
 
-app.controller('subjectArea',["$http", "$q", function($http, $q){
+app.controller('subjectArea',["$scope","$http", "$q", function($scope, $http, $q){
 
-    var scope = this;
-
-    this.showEditForm = false;
-    this.message = {
+    $scope.showEditForm = false;
+    $scope.message = {
         success: false,
         error: false,
         text: ''
     };
 
 
-    function messageSuccess(){
-        this.message.success = true;
-        this.message.text = 'Successfully Added !';
+    /******************************************************/
+    /*	SOME HELPER FUNCTION  */
+    /******************************************************/
+
+
+    $scope.resetFormFields = function(){
+
+        $scope.subject_name = '';
+        $scope.subject_scale = '';
+        $scope.test_duration = '';
+        $scope.total_question = '';
+
     };
 
-    this.messageError = function(){
-        this.message.error = true;
-        this.message.text = 'Sorry, Error Occurred !';
+    $scope.messageSuccess = function(successMessage){
+        $scope.message.success = true;
+        $scope.message.text = successMessage;
+    };
+
+    $scope.messageError = function(){
+        $scope.message.error = true;
+        $scope.message.text = 'Sorry, Error Occurred !';
 
     };
 
 
+    // initial values, works when there is no record set in the database
 
-    this.subjects = [
+    $scope.subjects = [
         {
             title: "Software Engineering",
             test_duration: "40min Max",
@@ -48,31 +61,13 @@ app.controller('subjectArea',["$http", "$q", function($http, $q){
             total_question: "20MCQ"
         },
         {
-            title: "Nural Network",
-            test_duration: "40min Max",
-            scale: "4.00",
-            total_question: "20MCQ"
-        },
-        {
-            title: "System Analysis & Design",
-            test_duration: "40min Max",
-            scale: "4.00",
-            total_question: "20MCQ"
-        },
-        {
-            title: "Data Structure & Algorithm",
-            test_duration: "40min Max",
-            scale: "4.00",
-            total_question: "20MCQ"
-        },
-        {
-            title: "Java Programming",
+            title: "Neural Network",
             test_duration: "40min Max",
             scale: "4.00",
             total_question: "20MCQ"
         }
-
     ];
+
 
     // will get the subject from database
 
@@ -81,7 +76,7 @@ app.controller('subjectArea',["$http", "$q", function($http, $q){
     $http.get('subject_management.php').success(function(data){
 
         if(data.length > 0){
-            scope.subjects = data;
+            $scope.subjects = data;
         }
 
         defObj.resolve({
@@ -93,131 +88,124 @@ app.controller('subjectArea',["$http", "$q", function($http, $q){
         console.log(error);
     });
 
-    console.log(defObj.promise);
+//    console.log(defObj.promise);
+
+
 
     /* Subjects functions */
 
-    this.addSubject = function(){
+    $scope.abc = function(){
+        console.log('abc called');
+    }
 
-        //console.log(this.subject_name);
+    $scope.addSubject = function(){
 
         //push to the database first
-
         var newSubject = {
-            title: this.subject_name,
-            test_duration: this.test_duration,
-            scale: this.subject_scale,
-            total_question: this.total_question,
+            title: $scope.subject_name,
+            test_duration: $scope.test_duration,
+            scale: $scope.subject_scale,
+            total_question: $scope.total_question,
             _caller : 'insert'
         };
 
         $http.post('subject_management.php', newSubject).success(function(data){
 
             if(data.success){
-                this.subjects.push(newSubject);
-
-                // this.resetFormFields(); //not working
-                // messageSuccess();
-
-
-                this.message.success = true;
-                this.message.text = "Successfully Added !";
-
-                //working
-
-                this.subject_name = '';
-                this.subject_scale = '';
-                this.test_duration = '';
-                this.total_question = '';
-
+                $scope.subjects.push(newSubject);
+                $scope.resetFormFields();
+                $scope.messageSuccess('Successfully Added !');
             }else{
-                scope.message.error = true;
-                scope.message.text = "Sorry, Something went wrong !";
-
+                $scope.messageError();
             }
-
 
         }).error(function(err){
 
             console.log(err);
+
         });
 
+    };
+
+    $scope.editSubject = function($index){
+
+        $scope.showEditForm = true;
+        $scope.updateIndex = $index;
+        $scope.subject_name = $scope.subjects[$index].title;
+        $scope.test_duration = $scope.subjects[$index].test_duration;
+        $scope.subject_scale = $scope.subjects[$index].scale;
+        $scope.total_question = $scope.subjects[$index].total_question;
 
     };
 
-    this.editSubject = function($index){
 
-        this.showEditForm = true;
-        this.updateIndex = $index;
+    $scope.updateSubject = function($index){
 
-        this.subject_name = this.subjects[$index].title;
-        this.test_duration = this.subjects[$index].test_duration;
-        this.subject_scale = this.subjects[$index].scale;
-        this.total_question = this.subjects[$index].total_question;
-
-    };
-
-
-    this.updateSubject = function($index){
-
-        this.subjects[$index] = {
-
-            name: this.subject_name,
-            test_duration: this.test_duration,
-            scale: this.subject_scale,
-            total_question: this.total_question
+        var subject = {
+            id: $scope.subjects[$index].id,
+            title: $scope.subject_name,
+            test_duration: $scope.test_duration,
+            scale: $scope.subject_scale,
+            total_question: $scope.total_question,
+            _caller: 'update'
 
         };
 
-        this.showEditForm = false;
-       // this.messageError();
+        $http.post('subject_management.php', subject ).success(function(data){
 
-        this.message.success = true;
-        this.message.text = "Successfully updated !";
+            if(data.success){
 
-       // this.resetFormFields();  // not working
+                $scope.subjects[$index] = subject;
 
-       //working
+                $scope.showEditForm = false;
+                $scope.messageSuccess('Successfully Updated !');
+                $scope.resetFormFields();
 
-        this.subject_name = '';
-        this.subject_scale = '';
-        this.test_duration = '';
-        this.total_question = '';
+            }else{
 
+                $scope.showEditForm = false;
+                $scope.resetFormFields();
+                $scope.messageError();
 
-    };
-
-
-
-    this.deleteSubject = function($index){
-
-        /*
-
-        var deleteSubject = {
-            id: $index,
-            _caller: 'delete'
-        }
-
-        $http.post('subject_management.php', deleteSubject).success(function(data){
+            }
 
         }).error(function(err){
 
         });
-        */
-
-        this.subjects.splice($index, 1);
-    };
-
-    var $this = this;
-    this.resetFromFields = function(){
-
-        $this.subject_name = '';
-        $this.subject_scale = '';
-        $this.test_duration = '';
-        $this.total_question = '';
 
     };
 
+
+
+    $scope.deleteSubject = function($index){
+
+        var deleteSubject = {
+            id: $scope.subjects[$index].id,
+            _caller: 'delete'
+        }
+
+        console.log($scope.subjects[$index].id);
+
+        $http.post('subject_management.php', deleteSubject).success(function(data){
+
+            if(data.success){
+
+                $scope.subjects.splice($index, 1);
+              //  $scope.message.success = true;
+              //  $scope.message.text = "Successfully Deleted !";
+
+                $scope.messageSuccess('Successfully Deleted !');
+
+            }else{
+                $scope.messageError();
+            }
+
+        }).error(function(err){
+            console.log(err);
+
+        });
+
+    };
 
 
 
@@ -225,7 +213,7 @@ app.controller('subjectArea',["$http", "$q", function($http, $q){
 
 
 
-    this.questions = [
+    $scope.questions = [
         {
             subject_id: 1, // will retrive the questions using the subject id later on
             question_id: 1,
@@ -249,53 +237,53 @@ app.controller('subjectArea',["$http", "$q", function($http, $q){
 
     ];
 
-    this.addQuestion = function(){
+    $scope.addQuestion = function(){
 
-        this.questions.push({
+        $scope.questions.push({
             subject_id: 1,
             question_id: 1,
-            title: this.question_title
+            title: $scope.question_title
         });
 
-        this.question_title = '';
+        $scope.question_title = '';
 
-        this.message.success = true;
-        this.message.text = "Successfully Added !";
+        $scope.message.success = true;
+        $scope.message.text = "Successfully Added !";
 
        // messageSuccess();
 
     };
 
-    this.editQuestion = function($index){
+    $scope.editQuestion = function($index){
 
-        this.questionIndex = $index;
-        this.showEditForm = true;
-        this.question_title = this.questions[$index].title;
+        $scope.questionIndex = $index;
+        $scope.showEditForm = true;
+        $scope.question_title = $scope.questions[$index].title;
 
     };
 
-    this.updateQuestion = function($index){
+    $scope.updateQuestion = function($index){
 
-        this.questions[$index] = {
-            subject_id: this.questions[$index].subject_id,
-            question_id: this.questions[$index].question_id,
-            title: this.question_title
+        $scope.questions[$index] = {
+            subject_id: $scope.questions[$index].subject_id,
+            question_id: $scope.questions[$index].question_id,
+            title: $scope.question_title
 
         };
 
-        this.showEditForm = false;
-        this.question_title = '';
+        $scope.showEditForm = false;
+        $scope.question_title = '';
 
-        this.message.success = true;
-        this.message.text = "Successfully Updated !";
+        $scope.message.success = true;
+        $scope.message.text = "Successfully Updated !";
 
         // messageSuccess();
 
     };
 
-    this.deleteQuestion = function($index){
+    $scope.deleteQuestion = function($index){
 
-        this.questions.splice($index, 1);
+        $scope.questions.splice($index, 1);
 
     };
 
