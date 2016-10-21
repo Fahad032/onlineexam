@@ -25,7 +25,7 @@ if( isset($_POST['_caller']) && $_POST['_caller'] == 'insert'){
 
    if($subjects->store($subject)){
 
-       exit(json_encode(['success' => TRUE]));
+       exit(json_encode(['success' => TRUE, 'id' => $subjects->mysqli->insert_id]));
 
    }
 
@@ -57,7 +57,8 @@ if(isset($_POST['_caller']) && $_POST['_caller'] == 'update'){
         'title' => $_POST['title'],
         'test_duration' => $_POST['test_duration'],
         'scale' => $_POST['scale'],
-        'total_question' => $_POST['total_question']
+        'total_question' => $_POST['total_question'],
+        'updated_at' => $time = (new DateTime())->format('Y-m-d H:i:s')
     ];
 
     if($subjects->update($_POST['id'], $subject)){

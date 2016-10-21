@@ -102,6 +102,7 @@ app.controller('subjectArea',["$scope","$http", "$q", function($scope, $http, $q
 
         //push to the database first
         var newSubject = {
+            id: '',
             title: $scope.subject_name,
             test_duration: $scope.test_duration,
             scale: $scope.subject_scale,
@@ -112,6 +113,7 @@ app.controller('subjectArea',["$scope","$http", "$q", function($scope, $http, $q
         $http.post('subject_management.php', newSubject).success(function(data){
 
             if(data.success){
+                newSubject.id = data.id;
                 $scope.subjects.push(newSubject);
                 $scope.resetFormFields();
                 $scope.messageSuccess('Successfully Added !');
