@@ -215,3 +215,8 @@ a.edit-link .label, a.delete-link .label{
     margin-top: 10px;
 }
 
+#add_answer label, #edit_answer label{
+    margin-left: 5px;
+    margin-right: 10px;
+}
+

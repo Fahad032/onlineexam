@@ -1,71 +1,20 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1" />
-    <title>Online Exam System</title>
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/style.css">
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto" />
-    <script src="../js/jquery-3.1.1.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/angular-1.5.8/angular.js"></script>
-    <script src="../js/angular-1.5.8/angular-route.min.js"></script>
-    <script src="../js/angular-1.5.8/angular-messages.js"></script>
-    <script src="../js/myapp.js"></script>
 
-</head>
-<body>
-<!-- application section -->
-<section class="application">
-
-    <div class="container">
-        <div class="row">
-
-
-            <div class="col-sm-12" ng-app="MyApp">
                 <!-- dashboard -->
                 <div class="row dashboard">
                     <!-- dashboard-header -->
-                    <div class="col-xs-12 dashboard-header">
-                        <a href="#" class="brand">
-                            <span class="fa fa-clipboard fa-2x"></span> <span class="brand-title">Online Exam System</span>
-                        </a>
-
-                    </div>
+                    <div ng-include="'partials/header.html'"></div>
                     <!-- /dashboard-header -->
                     <div class="clearfix"></div>
                     <!-- sidebar-content -->
-                    <div class="col-sm-3 sidebar">
-                        <div class="user-icon">
-                            <div class="user-profile-img circle">
-                                <span class="fa fa-user fa-2x"></span>
-                            </div>
-                            <span class="user-name">Jhon Doe</span>
-                        </div>
-                        <div class="clearfix"></div>
-
-                        <hr class="alt">
-
-                        <div class="clearfix"></div>
-
-                        <ul class="sidebar-nav">
-                            <li><a href="manage-user.html"><span class="fa fa-group"></span> User Accounts </a></li>
-                            <li><a href="add-subject.html"><span class="fa fa-book"></span> Subjects </a></li>
-                            <li><a href="#"><span class="fa fa-cogs"></span> Edit profile</a></li>
-                            <li><a href="../index.html"><span class="fa fa-sign-out"></span> Logout</a></li>
-                        </ul>
-
-                    </div>
+                    <div ng-include="'admin/partials/admin-sidebar.html'"></div>
                     <!-- /sidebar -->
                     <!-- main-content -->
 
-                    <div class="col-sm-9 main-content" ng-controller="subjectArea as subjectCtrl">
+                    <div class="col-sm-9 main-content" ng-controller="QuestionArea">
 
 
                         <div class="box-title">
-                            <span class="headline">(Software Engineering) Questions List</span>
+                            <span class="headline">{{subject.title}} Questions List</span>
                         </div>
                         <div class="clearfix"></div>
                         <hr class="alt">
@@ -84,9 +33,9 @@
                             <tbody>
                             <tr ng-if="questions.length" ng-repeat="question in questions">
                                 <td>{{ $index+1 }}</td>
-                                <td><a href="#" title="Add Answer">{{ question.title }} ?</a></td>
+                                <td><a href="#/admin/{{question.id}}/answer-management" title="Add Answer">{{ question.title }} ?</a></td>
                                 <td>
-                                    <a class="edit-link text-primary"><label class="label label-primary"><span class="fa fa-graduation-cap"></span> Answer Options</label></a>
+                                    <a class="edit-link text-primary" href="#/admin/{{question.id}}/answer-management"><label class="label label-primary"><span class="fa fa-graduation-cap"></span> Answer Options</label></a>
                                     <a class="edit-link text-primary" ng-click="editQuestion($index);"><label class="label label-info"><span class="fa fa-pencil"></span> Edit</label></a>
                                     <a class="delete-link text-danger" ng-click="deleteQuestion($index);"><label class="label label-danger"><span class="fa fa-trash-o"></span> Delete</label></a>
                                 </td>
@@ -125,7 +74,7 @@
                             <div class="box-title">
                                 <span class="headline">Add New Question</span>
 
-                                <span class="pull-right" ng-include="'action-message.html'"></span>
+                                <span class="pull-right" ng-include="'admin/action-message.html'"></span>
 
                             </div>
                             <div class="clearfix"></div>
@@ -204,7 +153,7 @@
                                          ng-messages="edit_question.question_title.$error"
                                          ng-if="edit_question.question_title.$touched">
 
-                                        <div ng-messages-include="error-messages.html"></div>
+                                        <div ng-messages-include="admin/error-messages.html"></div>
 
                                     </div>
                                 </div>

@@ -1,14 +1,30 @@
 <?php
 
 include_once('../repository/question.php');
-$subject_id = 30;
-$questions = new question($subject_id);
-
-
+$questions = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST)){
 
     $_POST = json_decode(file_get_contents('php://input'), true);
+
+    if(isset($_POST['subject_id'])){
+
+        $subject_id = $_POST['subject_id'];
+        $questions = new question();
+
+
+    }
+
+}
+
+
+// GET A QUESTION BY ITS ID
+
+if( isset($_POST['_caller']) && $_POST['_caller'] == 'get_by_id'){
+
+    $questionId = $_POST['id'];
+    $question = $questions->getById($questionId);
+    exit(json_encode(['success' => TRUE, 'data' => $question ]));
 
 }
 
@@ -68,7 +84,7 @@ if(isset($_POST['_caller']) && $_POST['_caller'] == 'update'){
 }
 
 
-exit($questions->index());
+exit($questions->index($subject_id));
 
 //return $questions->index();
 

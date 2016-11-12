@@ -15,25 +15,15 @@ class Question extends MysqlConnection
     protected $subject_id;
 
     /**
+     * Retrieve All the questions for a given subject id
      * @param $subjectId, the subject on which the question is related to.
-     *
-     */
-
-    public function __construct($subject_id){
-
-        parent::__construct();
-
-        $this->subject_id = $subject_id;
-
-    }
-
-    /**
-     * Retrieve All the questions for a given subject id 
      * @return QuestionObject
      * 
      */
 
-    public function index(){
+    public function index($subject_id){
+
+        $this->subject_id = $subject_id;
 
         $questions = $this->getAll($this->table, ['subject_id' => $this->subject_id]);
 
@@ -60,6 +50,21 @@ class Question extends MysqlConnection
 
         return $this->addNew($questionProperty, $this->table);
 
+
+    }
+
+
+    /**
+     * Retrive the question which has the given id
+     * @param $id, id of the question
+     * @return object
+     *
+     */
+
+
+    public function getById($id){
+
+        return $this->get($id, $this->table);
 
     }
 
@@ -103,5 +108,6 @@ class Question extends MysqlConnection
 /*
 $questions = new Question(1);
 
-echo $questions->index();
+//echo $questions->index();
+var_dump($questions->getById(1));
 */

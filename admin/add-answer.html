@@ -1,0 +1,211 @@
+
+<!-- dashboard -->
+<div class="row dashboard">
+    <!-- dashboard-header -->
+    <div ng-include="'partials/header.html'"></div>
+    <!-- /dashboard-header -->
+    <div class="clearfix"></div>
+    <!-- sidebar-content -->
+    <div ng-include="'admin/partials/admin-sidebar.html'"></div>
+    <!-- /sidebar -->
+    <!-- main-content -->
+
+    <div class="col-sm-9 main-content" ng-controller="AnswerOptions">
+
+
+        <div class="box-title">
+            <span class="headline"> {{ questionObj[0].title }} </span>
+        </div>
+        <div class="clearfix"></div>
+        <hr class="alt">
+        <div class="clearfix"></div>
+
+        <table class="table table-condensed table-responsive table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Sl. No</th>
+                <th>Answer Option</th>
+                <th>Correct / Incorrect</th>
+                <th>Actions</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+            <tr ng-if="questionObj.length" ng-repeat="answer in questionObj">
+                <td>{{ $index+1 }}</td>
+                <td><a href="#" title="Add Answer">{{ answer.details }} </a></td>
+                <td> {{ answer.correct }}</td>
+
+                <td>
+                    <a class="edit-link text-primary" ng-click="editAnswer($index);"><label class="label label-info"><span class="fa fa-pencil"></span> Edit</label></a>
+                    <a class="delete-link text-danger" ng-click="deleteAnswer($index);"><label class="label label-danger"><span class="fa fa-trash-o"></span> Delete</label></a>
+                </td>
+            </tr>
+            <tr ng-if="!questionObj.length">
+                <td colspan="3"> <h4 class="text-muted text-center">---- No answer has set yet ! ----</h4></td>
+
+            </tr>
+
+            </tbody>
+
+            <tfoot>
+            <tr>
+                <td colspan="6">
+                    <p>
+                        *note: Check the answer options either to add a new answer for that
+                        specific question or to check and modify the existing answers. You can
+                        also check the answer list for a question by clicking on it.
+                    </p>
+                </td>
+            </tr>
+            </tfoot>
+
+        </table>
+
+
+        <div class="clearfix"></div>
+
+        <!-- add-question-form -->
+
+        <!-- <div  ng-hide="showEditForm" ng-include="'forms/addQuestion.html'">
+         </div> -->
+
+        <div class="form-wrapper" ng-hide="showEditForm" >
+
+            <div class="box-title">
+                <span class="headline">Add an answer</span>
+
+                <span class="pull-right" ng-include="'admin/action-message.html'"></span>
+
+            </div>
+            <div class="clearfix"></div>
+            <hr class="alt">
+            <div class="clearfix"></div>
+
+
+            <form name="add_answer" novalidate class="form-inline" id="add_answer"
+                  ng-submit="add_answer.$valid && addAnswer();">
+                <div class="col-sm-7"
+                     ng-class="{ 'has-error': add_answer.answer_details.$touched && add_answer.answer_details.$invalid}">
+                        <input type="text"
+                               ng-model="answer_details"
+                               required
+                               ng-minlength="10"
+                               name="answer_details"
+                               class="form-control input-sm"
+                               style="width:100%;" placeholder="Answer Details"/>
+                    </div>
+                    <div class="col-sm-5">
+
+                        <label for="true"><input type="radio" ng-model="correct_answer" value="1"> True </label>
+                        <label for="false"><input type="radio" ng-model="correct_answer" value="0" ng-checked="true"> False </label>
+
+                            <input type="submit" name="submit_answer" class="btn btn-sm btn-success"
+                                   value="Add Answer"/>
+
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="help-block"
+                         ng-messages="add_answer.answer_details.$error"
+                         ng-if="add_answer.answer_details.$touched">
+
+                        <div ng-messages-include="admin/error-messages.html"></div>
+
+                    </div>
+                <div class="clearfix"></div>
+            </form>
+            <div class="clearfix"></div>
+
+        </div>
+
+        <!-- /add-question-form -->
+
+        <div class="clearfix"></div>
+
+        <!-- editQuestion form -->
+
+        <!-- <div  ng-show="showEditForm" ng-include="'forms/editQuestion.html'"></div> -->
+        <div class="form-wrapper" ng-show="showEditForm">
+
+            <div class="box-title">
+                <span class="headline">Edit Answer</span>
+            </div>
+            <div class="clearfix"></div>
+            <hr class="alt">
+            <div class="clearfix"></div>
+
+
+            <form name="edit_answer" novalidate class="form-inline" id="editAnswer" ng-submit="edit_answer.$valid && updateAnswer(answerIndex);">
+                <div class="col-sm-7"
+                     ng-class="{ 'has-error': edit_answer.answer_details.$touched && edit_answer.answer_details.$invalid}">
+                        <input type="text"
+                               ng-model="answer_details"
+                               required
+                               ng-minlength="10"
+                               name="edit_answer"
+                               class="form-control input-sm"
+                               style="width:100%;" placeholder="Answer details" />
+
+                 </div>
+                        <div class="col-sm-5">
+
+                            <label for="true"><input type="radio" ng-model="correct" name="correct_answer" value="1" > True </label>
+                            <label for="false"><input type="radio" ng-model="correct" name="correct_answer" value="0" > False </label>
+
+                            <input type="submit" name="submit_answer" class="btn btn-sm btn-success"
+                                   value="Update"/>
+
+
+                        </div>
+
+
+                    <div class="clearfix"></div>
+                    <div class="help-block"
+                         ng-messages="edit_answer.answer_detials.$error"
+                         ng-if="edit_answer.answer_details.$touched">
+
+                        <div ng-messages-include="admin/error-messages.html"></div>
+
+                    </div>
+
+                <div class="clearfix"></div>
+            </form>
+            <div class="clearfix"></div>
+
+        </div>
+
+
+        <!-- / editQuestion form -->
+
+
+
+    </div>
+    <!-- /main-content -->
+    <div class="clearfix"></div>
+
+    <footer>
+        <p>
+            &copy; 2016. All right Reserved
+            <span class="pull-right">Developed By: <strong>Jhon Doe</strong></span>
+        </p>
+    </footer>
+
+</div>
+<!-- /dashboard -->
+
+<div class="clearfix"></div>
+</div>
+
+
+
+</div>
+</div>
+
+</section>
+
+<!-- /application section -->
+
+</body>
+</html>

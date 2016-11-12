@@ -1,4 +1,4 @@
-<div class="login-form-container">
+<div class="login-form-container" ng-controller="LoginRegisterController">
 
     <div class="box-title">
         <span class="headline">Online Exam System   </span>
@@ -6,14 +6,18 @@
 
     <hr class="alt" />
 
-    <form name="loginform" action="#" class="form-horizontal" no-validate
-          ng-submit="loginform.$valid && logCtrl.logIn">
+    <form name="loginform" class="form-horizontal"
+          ng-submit="logIn()">
+        <div class="form-group text-center" ng-show="loginFailed">
+            <span class="text-danger">Login Failed ! Username or Password is incorrect.   </span>
+        </div>
+        <div class="clearfix"></div>
 
         <div class="form-group" ng-class="{ 'has-error': loginform.username.$touched && loginform.username.$invalid }">
             <label class="col-sm-3">Username:</label>
 
             <div class="col-sm-9">
-                <input  type="email" required name="username" ng-model="logCtrl.username" class="form-control" placeholder="user@example.com" />
+                <input  type="email" required name="username" ng-model="user.username" class="form-control" placeholder="user@example.com" />
             </div>
 
             <div class="error" ng-message-include="error-messages.html"></div>
@@ -25,7 +29,7 @@
             <label class="col-sm-3">Password:</label>
 
             <div class="col-sm-9">
-                <input  type="password" name="password" class="form-control" required placeholder="your password" />
+                <input  type="password" name="password" ng-model="user.password" class="form-control" required placeholder="your password" />
             </div>
 
         </div>
@@ -34,7 +38,7 @@
         <div class="form-group">
             <div class="col-sm-9 col-sm-offset-3">
                 <button  type="submit" class="btn btn-primary" ><span class="fa fa-user"></span> Login </button>
-                <a href="register" class="btn btn-warning">Register</a>
+                <a href="#register" class="btn btn-warning">Register</a>
             </div>
 
         </div>

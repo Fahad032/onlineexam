@@ -29,7 +29,6 @@ class MysqlConnection
 
 
     public function getAll($table, $condition = null){
-
         $sql = "SELECT * FROM $table";
 
         if($condition != null){
@@ -37,7 +36,6 @@ class MysqlConnection
         $sql .= $this->_buildCondition($condition);
 
         }
-
         $query = $this->mysqli->query($sql);
 
         $results = [];
@@ -65,7 +63,7 @@ class MysqlConnection
 
         if(is_array($condition)){
 
-            $key_count = count($condition);
+            $key_count = count($condition);  // 1
 
             foreach($condition as $key => $val){
 
