@@ -481,13 +481,17 @@ app.controller("AnswerOptions", ["$scope", "$http", "$q", "$routeParams", "examL
         $scope.questionObj = {
         };
 
+        $scope.question = '';
+
        // var defObj = $q.defer();
         $http.post('admin/answer_management.php', data).success(function(data){
 
                   $scope.questionObj = data;
+                  $scope.question = data[0].title;
          //       defObj.resolve({ data: data });
 
            // $scope.questionObj = defObj.promise;
+            console.log($scope.questionObj);
 
               }).error(function(err){
 
@@ -513,7 +517,17 @@ app.controller("AnswerOptions", ["$scope", "$http", "$q", "$routeParams", "examL
                 if (data.success) {
 
                     answerObj['id'] = data.id;
-                    $scope.questionObj.push(answerObj);
+                    // check if it is the first answer option, that was blank earlier
+                    if(!$scope.questionObj[0] || !$scope.questionObj[0].details){
+                        $scope.questionObj[0] = answerObj;
+
+                        //details = answerObj.details;
+                        //$scope.questionObj[0].question_id = answerObj.question_id;
+                        //$scope.questionObj[0].id = answerObj.id;
+                    }else{
+                        $scope.questionObj.push(answerObj);
+                    }
+
                     $scope.answer_details = '';
                     $scope.message = examListsFactory().messageSuccess('Successfully Added !');
 

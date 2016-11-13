@@ -14,7 +14,7 @@
 
 
         <div class="box-title">
-            <span class="headline"> {{ questionObj[0].title }} </span>
+            <span class="headline"> {{ question }} </span>
         </div>
         <div class="clearfix"></div>
         <hr class="alt">
@@ -32,7 +32,7 @@
             </thead>
 
             <tbody>
-            <tr ng-if="questionObj.length" ng-repeat="answer in questionObj">
+            <tr ng-if="questionObj.length && questionObj[0].details.length" ng-repeat="answer in questionObj">
                 <td>{{ $index+1 }}</td>
                 <td><a href="#" title="Add Answer">{{ answer.details }} </a></td>
                 <td> {{ answer.correct }}</td>
@@ -42,8 +42,8 @@
                     <a class="delete-link text-danger" ng-click="deleteAnswer($index);"><label class="label label-danger"><span class="fa fa-trash-o"></span> Delete</label></a>
                 </td>
             </tr>
-            <tr ng-if="!questionObj.length">
-                <td colspan="3"> <h4 class="text-muted text-center">---- No answer has set yet ! ----</h4></td>
+            <tr ng-if="!questionObj.length || !questionObj[0].details.length">
+                <td colspan="3"> <h4 class="text-muted text-center">---- No answer has set yet ! ---- {{ !questionObj[0].details.length }}</h4></td>
 
             </tr>
 
