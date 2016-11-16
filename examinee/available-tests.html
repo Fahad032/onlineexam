@@ -1,0 +1,71 @@
+
+<!-- dashboard -->
+<div class="row dashboard">
+    <!-- dashboard-header -->
+    <div ng-include="'partials/header.html'"></div>
+    <!-- /dashboard-header -->
+    <div class="clearfix"></div>
+    <!-- sidebar-content -->
+    <div ng-include="'examinee/partials/sidebar.html'"></div>
+    <!-- /sidebar -->
+    <!-- main-content -->
+
+    <div class="col-sm-9 main-content" ng-controller="subjectArea">
+
+
+        <div class="box-title">
+            <span class="headline">Available Tests</span>
+        </div>
+        <div class="clearfix"></div>
+        <hr class="alt">
+        <div class="clearfix"></div>
+
+        <table class="table table-condensed table-responsive table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Sl. No</th>
+                <th>Subject</th>
+                <th>Scale</th>
+                <th>Total Questions</th>
+                <th>Time Duration</th>
+                <th>Action</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+            <tr ng-repeat="subject in subjects">
+                <td>{{ $index+1 }}</td>
+                <td>{{ subject.title}}</td>
+                <td>{{ subject.scale }}</td>
+                <td>{{ subject.total_question }}</td>
+                <td><span class="label label-info">{{ subject.test_duration }}</span></td>
+                <td><a href="#/dashboard/{{subject.id}}/exam" class="btn btn-warning btn-sm">Take Test</a></td>
+            </tr>
+            </tbody>
+
+            <tfoot>
+            <tr>
+                <td colspan="6">
+                    <p>
+                        *note: Please avoid unfair while taking a test,
+                        Googling, having script in desk, collecting answer
+                        while you are sitting in the exam are considered as violation
+                    </p>
+                </td>
+            </tr>
+            </tfoot>
+
+        </table>
+
+
+    </div>
+    <!-- /main-content -->
+    <div class="clearfix"></div>
+
+    <footer ng-include="'partials/footer.html'">
+    </footer>
+
+</div>
+<!-- /dashboard -->
+<div class="clearfix"></div>

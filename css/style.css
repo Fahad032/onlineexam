@@ -26,6 +26,10 @@ a, a:focus, a:hover{
 
 }
 
+.relative{
+    position: relative;
+}
+
 /******************************************************/
 /*	GENERAL STYLE FLOW */
 /******************************************************/
@@ -41,11 +45,19 @@ body {
     height: 100%;
 }
 
-.login-form-container{
-    padding: 30px;
+.login-content-wrap{
     width: 500px;
     margin: auto;
     margin-top: 15%;
+}
+.registration-success-message{
+    margin-bottom: 15px;
+}
+
+.login-form-container{
+    padding: 30px;
+    width: 100%;
+    margin: auto;
     background: #fafafa;
     box-shadow: 0px 0px 15px -4px #000000;
     -moz-border-radius: 5px;
@@ -88,7 +100,7 @@ span.brand-title{
 /* sidebar */
 
 .sidebar{
-    min-height: 500px;
+    min-height: 900px;
     background: #0a0a0a;
     border-right: 1px solid #eee;
     padding-top: 15px;
@@ -149,7 +161,7 @@ ul.sidebar-nav li a .fa{
 /*main-content*/
 .main-content{
     background: #f7f7f7;
-    min-height: 500px;
+    min-height: 900px;
     padding-top: 15px;
     padding-bottom: 15px;
 }

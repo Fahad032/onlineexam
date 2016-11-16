@@ -33,21 +33,23 @@ if( isset($_POST['__caller']) && $_POST['__caller'] == 'login'){
     exit(json_encode(['success' => false]));
 
 }
-/*
-// INSERT A NEW SUBJECT
+
+
+// Register new user
 
 if( isset($_POST['_caller']) && $_POST['_caller'] == 'insert'){
 
-    $subject = [
-        'title' => $_POST['title'],
-        'test_duration' => $_POST['test_duration'],
-        'scale' => $_POST['scale'],
-        'total_question' => $_POST['total_question']
+    $user_info = [
+        'name' => addslashes($_POST['username']),
+        'email' => $_POST['email'],
+        'phone' => $_POST['phone'],
+        'password' => md5($_POST['password'])
     ];
 
-    if($subjects->store($subject)){
 
-        exit(json_encode(['success' => TRUE, 'id' => $subjects->mysqli->insert_id]));
+    if($user->register($user_info)){
+
+        exit(json_encode(['success' => TRUE, 'id' => $user->mysqli->insert_id]));
 
     }
 
@@ -55,6 +57,10 @@ if( isset($_POST['_caller']) && $_POST['_caller'] == 'insert'){
 
 }
 
+
+exit("From Outer Block");
+
+/*
 
 // DELETE A SUBJECT RECORDS
 

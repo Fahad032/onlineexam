@@ -46,8 +46,10 @@ app.factory('examListsFactory', ["$http", "$q", function ($http, $q) {
             isLoggedIn: false,
             isAdmin: false,
             isUser: false,
-            
-            loggedInUser: {
+            isRegisterSuccess: false,
+
+
+        loggedInUser: {
                 username: ''
             },
 
@@ -90,6 +92,7 @@ app.controller('LoginRegisterController', ["$scope","$http","$location","examLis
 
 
     $scope.loginFailed = false;
+    $scope.isRegisterSuccess = examListsFactory.isRegisterSuccess;
 
     $scope.logIn = function(){
 
@@ -132,6 +135,39 @@ app.controller('LoginRegisterController', ["$scope","$http","$location","examLis
 
 
     };
+    
+    
+    $scope.register = function(){
+        var user_data = {
+            _caller: 'insert',
+            username: $scope.user.name,
+            password: $scope.user.password,
+            email: $scope.user.email,
+            phone: $scope.user.phone
+        };
+        console.log("From Register function");
+        console.log(user_data);
+
+        $http.post('admin/authenticate_user.php', user_data).success(function(data){
+
+
+            console.log(data);
+
+            if(data.success){
+
+                examListsFactory.isRegisterSuccess = true;
+                $location.path('login');
+
+            }else{
+
+               // $scope.loginFailed = true;
+            }
+        }).error(function(err){
+            console.log(err);
+        });
+
+
+    }
 
 
 
@@ -635,6 +671,344 @@ app.controller("AnswerOptions", ["$scope", "$http", "$q", "$routeParams", "examL
     }]);
 
 
+
+/******************************************************/
+/*	Exam Controller */
+/******************************************************/
+
+app.controller('examController', ["$scope", "$http", "$q", "$routeParams", "examListsFactory", "$filter", "$timeout",
+    function($scope, $http, $q, $routeParams, examListsFactory, $filter, $timeout){
+
+        $scope.subjectId = $routeParams.subjectId;
+
+        var subjectLists = examListsFactory().defObj;
+        $scope.subjects = subjectLists.then(function (output) {
+            $scope.subject = $filter('filterById')(output.subjects, $scope.subjectId);
+        });
+
+
+        $scope.questionsList = '';
+        $scope.question_answer_options = [];
+        $scope.answers = [];
+        var exam_questions = [];
+        var q_ids = [];
+
+      /*  var questionAnswer = [
+            [
+                {
+                    "id": "1",
+                    "subject_id": "30",
+                    "title": "What does SDLC mean",
+                    "created_at": "2016-11-05 00:00:00",
+                    "updated_at": "2016-11-06 10:05:08",
+                    "question_id": "1",
+                    "details": "Software Development Life Cycle",
+                    "correct": "1"
+                },
+                {
+                    "id": "2",
+                    "subject_id": "30",
+                    "title": "What does SDLC mean",
+                    "created_at": "2016-11-06 00:00:00",
+                    "updated_at": "2016-11-06 10:18:03",
+                    "question_id": "1",
+                    "details": "System Development Life Cycle",
+                    "correct": "0"
+                },
+                {
+                    "id": "3",
+                    "subject_id": "30",
+                    "title": "What does SDLC mean",
+                    "created_at": "2016-11-06 04:43:53",
+                    "updated_at": "2016-11-06 10:43:53",
+                    "question_id": "1",
+                    "details": "System Design Life Cycle",
+                    "correct": "0"
+                },
+                {
+                    "id": "14",
+                    "subject_id": "30",
+                    "title": "What does SDLC mean",
+                    "created_at": "2016-11-12 14:45:44",
+                    "updated_at": "2016-11-12 15:59:22",
+                    "question_id": "1",
+                    "details": "Software Design Life Cycledfasdfas",
+                    "correct": "0"
+                },
+                {
+                    "id": "23",
+                    "subject_id": "30",
+                    "title": "What does SDLC mean",
+                    "created_at": "2016-11-12 15:33:38",
+                    "updated_at": "2016-11-12 16:01:19",
+                    "question_id": "1",
+                    "details": "Software Design Life Cycle",
+                    "correct": "1"
+                }
+            ],
+            [
+                {
+                    "id": "30",
+                    "subject_id": "30",
+                    "title": "What is software",
+                    "created_at": "2016-11-13 03:30:18",
+                    "updated_at": "2016-11-13 09:30:18",
+                    "question_id": "2",
+                    "details": "Software Design Life Cycle",
+                    "correct": "1"
+                },
+                {
+                    "id": "31",
+                    "subject_id": "30",
+                    "title": "What is software",
+                    "created_at": "2016-11-13 03:30:21",
+                    "updated_at": "2016-11-16 04:45:36",
+                    "question_id": "2",
+                    "details": "Software Design Life Cycle",
+                    "correct": "0"
+                },
+                {
+                    "id": "32",
+                    "subject_id": "30",
+                    "title": "What is software",
+                    "created_at": "2016-11-13 03:30:22",
+                    "updated_at": "2016-11-16 04:45:27",
+                    "question_id": "2",
+                    "details": "Software Design Life Cycle",
+                    "correct": "0"
+                },
+                {
+                    "id": "33",
+                    "subject_id": "30",
+                    "title": "What is software",
+                    "created_at": "2016-11-13 03:30:22",
+                    "updated_at": "2016-11-16 04:45:21",
+                    "question_id": "2",
+                    "details": "Software Design Life Cycle",
+                    "correct": "0"
+                }
+            ]
+        ];
+*/
+
+        var current_index = 0;
+        $scope.time_count = 1;
+
+
+        var showTimeCount = function(){
+
+
+            $scope.time_count =  $scope.time_count+1;
+
+           var promise =  $timeout(showTimeCount, 1000);
+
+            if($scope.time_count == 60){
+
+                $timeout.cancel(promise);
+                $scope.time_count = 0;
+            }
+
+
+        };
+
+        var showQuestion = function(){
+            
+            if(current_index < questionAnswer.length){
+
+                $scope.current_question = questionAnswer[current_index];
+                $scope.question = $scope.current_question[0].title;
+                current_index = current_index + 1;
+
+                console.log($scope.question);
+
+                var promise = $timeout(showQuestion,  1000*60);
+
+                showTimeCount();
+
+                if(current_index == questionAnswer.length){
+                    $timeout.cancel(promise);
+                }
+
+
+
+            }
+        };
+
+
+
+
+        $http.post('admin/question_management', {subject_id:$scope.subjectId}).success(function(data){
+
+            $scope.questionsList = data;
+
+
+            angular.forEach($scope.questionsList, function(value, key){
+
+                   // $scope.exam_question_id = value.id;
+                q_ids.push(value.id);
+
+
+                    $http.post('admin/answer_management', { question_id: value.id }).success(function(questionWithAnswer){
+
+                        exam_questions.push(questionWithAnswer);
+                        $scope.exam_question = value.title;
+                        $scope.question_answer_options.push(questionWithAnswer);
+
+                         console.log($scope.exam_question);
+                        // console.log(exam_questions);
+                        // console.log(questionWithAnswer);
+
+
+
+
+
+                    }).error(function(err){
+                        console.log(err);
+                    });
+
+//                    console.log(i);
+
+ //                   $scope.current_question = $scope.questions[0];
+ //                   $scope.question = $scope.current_question[0].title;
+
+ //                   i = ++i;
+
+
+                   // $timeout(displayQuestion, 5000);
+
+               // displayQuestion();
+                // $timeout(displayQuestion, 500);
+
+
+
+
+                
+
+              //  console.log(key + ' : ' + value.id);
+
+/*
+                var question_answer_option = $scope.question_answer_options;
+
+
+                var i = 0;
+
+
+                $scope.displayQuestion = function(question_answer_option , i ){
+
+                    $scope.exam_question = question_answer_option[i][0].title;
+
+                    angular.forEach(question_answer_option, function(value, index){
+
+                        $scope.answers.push(value.details);
+
+                    });
+
+                    console.log($scope.exam_question);
+
+
+                };
+
+                $scope.displayQuestion(question_answer_option, i);
+
+*/
+               // var displayQuestion = $scope.displayQuestion(question_answer_option, i);
+
+              //  setTimeout($scope.displayQuestion(question_answer_option, i), 200);
+
+               // function()
+
+/*
+                angular.forEach($scope.questions, function(value, index){
+
+                    var answer_details = [];
+
+                    setTimeout(function(){
+                        var question = value[0].title;
+
+                        angular.forEach(question, function(answer, ansIndex){
+
+                            answer_details.push({details: answer.details});
+
+                        });
+
+                        $scope.exam_answer_option = answer_details;
+                        $scope.exam_question = question;
+                        console.log($scope.exam_question);
+
+                    }, 60*1000);
+
+                });
+
+*/
+
+
+
+
+
+
+
+
+            }, $scope.exam_questions);
+
+            //console.log($scope.questionsList);
+            //console.log(exam_questions);
+
+
+        }).error(function(err){
+
+        });
+
+
+
+        $scope.questions = exam_questions;
+        var questionAnswer = $scope.question_answer_options;
+        console.log($scope.question_answer_options);
+
+
+        $timeout(showQuestion, 1200);
+
+
+
+
+
+
+
+
+
+
+
+
+//console.log($scope.questions);
+
+/*
+        $scope.current_question = '';
+
+        var i = 0;
+
+       var displayQuestion = function(){
+
+           console.log(i);
+
+           $scope.current_question = $scope.questions[0];
+           $scope.question = $scope.current_question[0].title;
+
+           i = ++i;
+
+
+           $timeout(displayQuestion, 5000);
+
+
+       };
+
+       displayQuestion();
+      // $timeout(displayQuestion, 500);
+
+*/
+
+
+
+        }]);
+
 /******************************************************/
 /*	Custom Route Definition */
 /******************************************************/
@@ -667,6 +1041,14 @@ app.config(function($routeProvider){
     }).when('/admin/:questionId/answer-management', {
         templateUrl: 'admin/add-answer.html',
         controller: 'AnswerOptions'
+    }).when('/dashboard/my-test', {
+            templateUrl: 'examinee/available-tests.html',
+        controller: 'subjectArea'
+    }).when('/dashboard/:subjectId/exam', {
+        templateUrl: 'examinee/exam.html',
+        controller: 'examController'
     });
 
 });
+
+

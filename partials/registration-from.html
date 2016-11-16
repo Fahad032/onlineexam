@@ -1,4 +1,6 @@
-<!-- register block -->
+
+<div class="login-content-wrap">
+    <!-- register block -->
 
 <div class="login-form-container">
 
@@ -8,13 +10,13 @@
 
     <hr class="alt" />
 
-    <form action="#" class="form-horizontal">
+    <form class="form-horizontal" ng-submit="register();">
 
         <div class="form-group">
             <label class="col-sm-3">Name:</label>
 
             <div class="col-sm-9">
-                <input  type="text" name="username" class="form-control" placeholder="Jhon Doe" />
+                <input  type="text" ng-model="user.name" name="username" class="form-control" placeholder="Jhon Doe" />
             </div>
 
         </div>
@@ -25,7 +27,7 @@
             <label class="col-sm-3">Email:</label>
 
             <div class="col-sm-9">
-                <input  type="email" name="email" class="form-control" placeholder="jhon@doe.com" />
+                <input  type="email" ng-model="user.email"  name="email" class="form-control" placeholder="jhon@doe.com" />
             </div>
 
         </div>
@@ -36,7 +38,7 @@
             <label class="col-sm-3">Contact No:</label>
 
             <div class="col-sm-9">
-                <input  type="text" name="phone" class="form-control" placeholder="01672316448" />
+                <input  type="text" ng-model="user.phone" name="phone" class="form-control" placeholder="01672316448" />
             </div>
 
         </div>
@@ -47,7 +49,7 @@
             <label class="col-sm-3">Password:</label>
 
             <div class="col-sm-9">
-                <input  type="password" name="password" class="form-control" placeholder="your password" />
+                <input  type="password" name="password" ng-model="user.password"  class="form-control" placeholder="your password" />
             </div>
 
         </div>
@@ -66,4 +68,5 @@
 
 </div>
 
+</div>
 <!-- /register block -->

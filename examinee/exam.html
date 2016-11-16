@@ -1,0 +1,57 @@
+
+<!-- dashboard -->
+<div class="row dashboard">
+    <!-- dashboard-header -->
+    <div ng-include="'partials/header.html'"></div>
+    <!-- /dashboard-header -->
+    <div class="clearfix"></div>
+    <!-- sidebar-content -->
+    <div ng-include="'examinee/partials/sidebar.html'"></div>
+    <!-- /sidebar -->
+    <!-- main-content -->
+
+    <div class="col-sm-9 main-content" ng-controller="examController">
+
+
+        <div class="box-title">
+            <span class="headline">{{ subject.title }} test</span>
+            <span class="pull-right text-danger"> Time: {{ time_count }} sec </span>
+        </div>
+        <div class="clearfix"></div>
+        <hr class="alt">
+        <div class="clearfix"></div>
+
+        <div class="question-block">
+
+            <h4>{{ question }} {{ exam_question_id }} </h4>
+
+            <form action="#" class="form-horizontal">
+
+                <ul class="question">
+                    <li class="radio" ng-repeat="answer in current_question"> <label><input type="radio" class="form-radio" name="question-ID"> {{ answer.details }} </label> </li>
+                </ul>
+                <div class="clearfix"></div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <input type="submit" class="btn btn-primary" value="Submit" />
+                    </div>
+                </div>
+
+                <pre>{{ current_question | json}}</pre>
+              <!--  <pre>{{ question_answer_options | json }}</pre> -->
+
+            </form>
+
+        </div>
+
+
+    </div>
+    <!-- /main-content -->
+    <div class="clearfix"></div>
+
+    <footer ng-include="'partials/footer.html'">
+    </footer>
+
+</div>
+<!-- /dashboard -->
+<div class="clearfix"></div>

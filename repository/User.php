@@ -38,8 +38,46 @@ class User extends MysqlConnection
 
     }
 
+
+    public function register($user_info){
+
+        if (!is_array($user_info)) {
+
+            exit("Registration operation expects an array of user information !");
+
+        }
+
+
+        if ($this->addNew($user_info, $this->table)) {
+
+            $user_role = [
+                'user_id' => $this->mysqli->insert_id,
+                'role_id' => 2
+            ];
+
+            $this->addNew($user_role, 'role_user');
+
+            return true;
+
+        }
+
+        return false;
+
+    }
+
 }
 
+/*
+$user = new User();
 
-//$user = new User();
+$user_info = [
+    'name' => 'Golam Kibrea',
+    'email' => 'gk_kibrea@gmail.com',
+    'phone' => '01672316448',
+    'password' => md5('member')
+];
+*/
+//echo $user->register($user_info);
+
+
 //var_dump($user->login([]));
