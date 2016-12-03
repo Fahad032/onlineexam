@@ -19,6 +19,7 @@
 
                         <div class="box-title">
                             <span class="headline">Manage User</span>
+                            <span class="pull-right" ng-include="'admin/action-message.html'"></span>
                         </div>
                         <div class="clearfix"></div>
                         <hr class="alt">
@@ -37,45 +38,13 @@
                             </thead>
 
                             <tbody>
-                            <tr>
-                                <td>01</td>
-                                <td>Jhon Doe</td>
-                                <td>jhon@doe.com</td>
-                                <td>+88-01675-230320</td>
+                            <tr ng-repeat="account in user_accounts">
+                                <td>{{ $index+1 }}</td>
+                                <td>{{ account.name }}</td>
+                                <td>{{ account.email }}</td>
+                                <td>{{ account.phone }}</td>
                                 <td><a href="#" class="edit-link text-primary"><label class="label label-info"><span class="fa fa-pencil"></span> Edit</label></a></td>
-                                <td><a href="#" class="delete-link text-danger"><label class="label label-danger"><span class="fa fa-trash-o"></span> Delete</label></a></td>
-                            </tr>
-                            <tr>
-                                <td>02</td>
-                                <td>Jhon Doe</td>
-                                <td>jhon@doe.com</td>
-                                <td>+88-01675-230320</td>
-                                <td><a href="#" class="edit-link text-primary"><label class="label label-info"><span class="fa fa-pencil"></span> Edit</label></a></td>
-                                <td><a href="#" class="delete-link text-danger"><label class="label label-danger"><span class="fa fa-trash-o"></span> Delete</label></a></td>
-                            </tr>
-                            <tr>
-                                <td>03</td>
-                                <td>Jhon Doe</td>
-                                <td>jhon@doe.com</td>
-                                <td>+88-01675-230320</td>
-                                <td><a href="#" class="edit-link text-primary"><label class="label label-info"><span class="fa fa-pencil"></span> Edit</label></a></td>
-                                <td><a href="#" class="delete-link text-danger"><label class="label label-danger"><span class="fa fa-trash-o"></span> Delete</label></a></td>
-                            </tr>
-                            <tr>
-                                <td>04</td>
-                                <td>Jhon Doe</td>
-                                <td>jhon@doe.com</td>
-                                <td>+88-01675-230320</td>
-                                <td><a href="#" class="edit-link text-primary"><label class="label label-info"><span class="fa fa-pencil"></span> Edit</label></a></td>
-                                <td><a href="#" class="delete-link text-danger"><label class="label label-danger"><span class="fa fa-trash-o"></span> Delete</label></a></td>
-                            </tr>
-                            <tr>
-                                <td>05</td>
-                                <td>Jhon Doe</td>
-                                <td>jhon@doe.com</td>
-                                <td>+88-01675-230320</td>
-                                <td><a href="#" class="edit-link text-primary"><label class="label label-info"><span class="fa fa-pencil"></span> Edit</label></a></td>
-                                <td><a href="#" class="delete-link text-danger"><label class="label label-danger"><span class="fa fa-trash-o"></span> Delete</label></a></td>
+                                <td><a ng-click="deleteAccount( $index );" class="delete-link text-danger"><label class="label label-danger"><span class="fa fa-trash-o"></span> Delete</label></a></td>
                             </tr>
                             </tbody>
 

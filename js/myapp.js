@@ -759,109 +759,7 @@ app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$route
         var exam_questions = [];
         var q_ids = [];
 
-      /*  var questionAnswer = [
-            [
-                {
-                    "id": "1",
-                    "subject_id": "30",
-                    "title": "What does SDLC mean",
-                    "created_at": "2016-11-05 00:00:00",
-                    "updated_at": "2016-11-06 10:05:08",
-                    "question_id": "1",
-                    "details": "Software Development Life Cycle",
-                    "correct": "1"
-                },
-                {
-                    "id": "2",
-                    "subject_id": "30",
-                    "title": "What does SDLC mean",
-                    "created_at": "2016-11-06 00:00:00",
-                    "updated_at": "2016-11-06 10:18:03",
-                    "question_id": "1",
-                    "details": "System Development Life Cycle",
-                    "correct": "0"
-                },
-                {
-                    "id": "3",
-                    "subject_id": "30",
-                    "title": "What does SDLC mean",
-                    "created_at": "2016-11-06 04:43:53",
-                    "updated_at": "2016-11-06 10:43:53",
-                    "question_id": "1",
-                    "details": "System Design Life Cycle",
-                    "correct": "0"
-                },
-                {
-                    "id": "14",
-                    "subject_id": "30",
-                    "title": "What does SDLC mean",
-                    "created_at": "2016-11-12 14:45:44",
-                    "updated_at": "2016-11-12 15:59:22",
-                    "question_id": "1",
-                    "details": "Software Design Life Cycledfasdfas",
-                    "correct": "0"
-                },
-                {
-                    "id": "23",
-                    "subject_id": "30",
-                    "title": "What does SDLC mean",
-                    "created_at": "2016-11-12 15:33:38",
-                    "updated_at": "2016-11-12 16:01:19",
-                    "question_id": "1",
-                    "details": "Software Design Life Cycle",
-                    "correct": "1"
-                }
-            ],
-            [
-                {
-                    "id": "30",
-                    "subject_id": "30",
-                    "title": "What is software",
-                    "created_at": "2016-11-13 03:30:18",
-                    "updated_at": "2016-11-13 09:30:18",
-                    "question_id": "2",
-                    "details": "Software Design Life Cycle",
-                    "correct": "1"
-                },
-                {
-                    "id": "31",
-                    "subject_id": "30",
-                    "title": "What is software",
-                    "created_at": "2016-11-13 03:30:21",
-                    "updated_at": "2016-11-16 04:45:36",
-                    "question_id": "2",
-                    "details": "Software Design Life Cycle",
-                    "correct": "0"
-                },
-                {
-                    "id": "32",
-                    "subject_id": "30",
-                    "title": "What is software",
-                    "created_at": "2016-11-13 03:30:22",
-                    "updated_at": "2016-11-16 04:45:27",
-                    "question_id": "2",
-                    "details": "Software Design Life Cycle",
-                    "correct": "0"
-                },
-                {
-                    "id": "33",
-                    "subject_id": "30",
-                    "title": "What is software",
-                    "created_at": "2016-11-13 03:30:22",
-                    "updated_at": "2016-11-16 04:45:21",
-                    "question_id": "2",
-                    "details": "Software Design Life Cycle",
-                    "correct": "0"
-                }
-            ]
-        ];
-*/
-
-
         var startTest = function(){
-
-            console.log(examListsFactory().getCookieData().userId);
-            console.log('startTest Fired : ' +(new Date()).getMilliseconds());
 
             var testData = {
                 user_id: examListsFactory().getCookieData().userId,
@@ -874,7 +772,6 @@ app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$route
 
                 if(data.success){
                     $scope.testData.testId = data.id;
-                    console.log(data.success);
 
                 }
 
@@ -887,7 +784,7 @@ app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$route
         };
 
          if($scope.testData.testId === 0){
-//             startTest();
+             startTest();
          }
 
         var current_index = 0;
@@ -899,11 +796,11 @@ app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$route
 
             $scope.time_count =  $scope.time_count+1;
 
-           var promise =  $timeout(showTimeCount, 1000);
+            $scope.time_promise =  $timeout(showTimeCount, 1000);
 
             if($scope.time_count == 60){
 
-                $timeout.cancel(promise);
+                $timeout.cancel($scope.time_promise);
                 $scope.time_count = 0;
             }
 
@@ -922,17 +819,7 @@ app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$route
 
                 showTimeCount();
 
-               // console.log($scope.question);
               current_index = current_index + 1;
-
-
-                //if(current_index == questionAnswer.length){
-
-                   // $timeout.cancel(promise);
-                   // showQuestion(); // to fire the else statement
-
-
-                //}
 
 
             }else{
@@ -958,110 +845,19 @@ app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$route
                 q_ids.push(value.id);
 
 
-                    $http.post('admin/answer_management', { question_id: value.id }).success(function(questionWithAnswer){
+                    $http.post('admin/answer_management.php', { question_id: value.id }).success(function(questionWithAnswer){
 
                         exam_questions.push(questionWithAnswer);
                         $scope.exam_question = value.title;
                         $scope.question_answer_options.push(questionWithAnswer);
 
                          console.log($scope.exam_question);
-                        // console.log(exam_questions);
-                        // console.log(questionWithAnswer);
-
-
-
-
 
                     }).error(function(err){
                         console.log(err);
                     });
 
-//                    console.log(i);
-
- //                   $scope.current_question = $scope.questions[0];
- //                   $scope.question = $scope.current_question[0].title;
-
- //                   i = ++i;
-
-
-                   // $timeout(displayQuestion, 5000);
-
-               // displayQuestion();
-                // $timeout(displayQuestion, 500);
-
-
-
-
-
-
-              //  console.log(key + ' : ' + value.id);
-
-/*
-                var question_answer_option = $scope.question_answer_options;
-
-
-                var i = 0;
-
-
-                $scope.displayQuestion = function(question_answer_option , i ){
-
-                    $scope.exam_question = question_answer_option[i][0].title;
-
-                    angular.forEach(question_answer_option, function(value, index){
-
-                        $scope.answers.push(value.details);
-
-                    });
-
-                    console.log($scope.exam_question);
-
-
-                };
-
-                $scope.displayQuestion(question_answer_option, i);
-
-*/
-               // var displayQuestion = $scope.displayQuestion(question_answer_option, i);
-
-              //  setTimeout($scope.displayQuestion(question_answer_option, i), 200);
-
-               // function()
-
-/*
-                angular.forEach($scope.questions, function(value, index){
-
-                    var answer_details = [];
-
-                    setTimeout(function(){
-                        var question = value[0].title;
-
-                        angular.forEach(question, function(answer, ansIndex){
-
-                            answer_details.push({details: answer.details});
-
-                        });
-
-                        $scope.exam_answer_option = answer_details;
-                        $scope.exam_question = question;
-                        console.log($scope.exam_question);
-
-                    }, 60*1000);
-
-                });
-
-*/
-
-
-
-
-
-
-
-
             }, $scope.exam_questions);
-
-            //console.log($scope.questionsList);
-            //console.log(exam_questions);
 
 
         }).error(function(err){
@@ -1072,10 +868,9 @@ app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$route
 
         $scope.questions = exam_questions;
         var questionAnswer = $scope.question_answer_options;
-        //console.log($scope.question_answer_options);
 
 
-        $timeout(showQuestion, 1200);
+        $scope.show_question_promise = $timeout(showQuestion, 1200);
 
         $scope.reply = {
             givenAnswer: 0
@@ -1083,12 +878,17 @@ app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$route
 
         $scope.answered = function(){
 
+            $timeout.cancel($scope.time_promise);
+
+            $scope.time_count = 0;
+
+            // lets clear the previous question time promise, so it will not deduct the current answer's time
+            $timeout.cancel($scope.promise);
 
             $scope.testData._caller = 'update';
 
             if($scope.reply.givenAnswer == 1){
                 $scope.testData.total_correct_answer = $scope.testData.total_correct_answer+1;
-               // $scope.testData.score =  $scope.testData.score+1;
 
             }else{
                 $scope.testData.total_wrong_answer = $scope.testData.total_wrong_answer+1;
@@ -1097,9 +897,8 @@ app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$route
 
             $http.post('examinee/exam_management.php', $scope.testData).success(function(data){
 
-                showQuestion();
 
-             //   console.log(data);
+                showQuestion();
 
             }).error(function(err){
                console.log(err);
@@ -1110,85 +909,179 @@ app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$route
 
         };
 
-
-
-
-
-
-
-
-
-//console.log($scope.questions);
-
-/*
-        $scope.current_question = '';
-
-        var i = 0;
-
-       var displayQuestion = function(){
-
-           console.log(i);
-
-           $scope.current_question = $scope.questions[0];
-           $scope.question = $scope.current_question[0].title;
-
-           i = ++i;
-
-
-           $timeout(displayQuestion, 5000);
-
-
-       };
-
-       displayQuestion();
-      // $timeout(displayQuestion, 500);
-
-*/
-
-
-
         }]);
 
 
-    app.controller('resultController', ["$rootScope", "$scope", "$http", "examListsFactory", "$q",
+app.controller('resultController', ["$rootScope", "$scope", "$http", "examListsFactory", "$q",
         function($rootScope, $scope, $http, examListsFactory, $q){
 
             // will get the results list from database
             $scope.results = [];
 
-           // var defObj = $q.defer();
-
         $http.post('examinee/my_results.php', {_caller: 'get_results', user_id: examListsFactory().getCookieData().userId})
             .success(function(data){
 
-
-                console.log(data);
-
                 $scope.results = data;
-                /*
-
-                if(data.length > 0){
-                    $scope.results = data;
-                }
-
-                defObj.resolve({
-                    data:data
-                });
-
-                */
-
-
-
-                //var subjectLists = examListsFactory().defObj;
-                //$scope.subjects = subjectLists.then(function (output) {
-                //    $scope.subject = $filter('filterById')(output.subjects, subjectId);
-                //});
 
         }).error(function(err){
            console.log(err);
         });
 
-    }]);
+}]);
+
+app.controller('profileController', ["$scope", "examListsFactory", "$http", function($scope, examListsFactory, $http){
+
+    var postData = {
+            _caller: 'user_profile',
+            id: examListsFactory().getCookieData().userId
+    };
+
+    $scope.profileData = {
+                            name: '',
+                            email: '',
+                            phone: '',
+                            psw: ''
+    };
+
+        $http.post('admin/authenticate_user.php', postData).success(function(data){
+
+            $scope.profileData.name = data.profile_data.name;
+            $scope.profileData.email = data.profile_data.email;
+            $scope.profileData.phone = data.profile_data.phone;
+
+        }).error(function(err){
+
+        });
+
+
+    $scope.updateProfile = function(){
+
+        var formData = {
+                _caller: 'update_profile',
+                id: examListsFactory().getCookieData().userId,
+                name: $scope.profileData.name,
+                email: $scope.profileData.email,
+                phone: $scope.profileData.phone,
+                psw: ($scope.profileData.psw.length > 0) ? $scope.profileData.psw: ''
+
+        };
+
+        console.log($scope.profileData.psw);
+
+        $http.post('admin/authenticate_user.php', formData).success(function(data){
+
+            if (data.success) {
+                $scope.message = examListsFactory().messageSuccess('Successfully Updated !');
+            } else {
+                $scope.message = examListsFactory().messageError();
+                console.log(data);
+            }
+
+        }).error(function(err){
+
+        });
+
+
+    }
+
+
+}]);
+
+
+
+// user account management
+app.controller('userController', ["$scope", "examListsFactory", "$http", function($scope, examListsFactory, $http){
+
+/*    var postData = {
+        _caller: 'user_profile',
+        id: examListsFactory().getCookieData().userId
+    };
+    $scope.profileData = {
+        name: '',
+        email: '',
+        phone: '',
+        psw: ''
+    };
+*/
+
+    $scope.user_accounts = [];
+
+
+        $http.post('admin/authenticate_user.php').success(function(data){
+
+            $scope.user_accounts = data;
+            console.log(data);
+
+    }).error(function(err){
+
+    });
+
+
+    $scope.deleteAccount = function(index){
+
+        console.log($scope.user_accounts[index].id);
+
+        $scope.user_accounts.splice(index, 1);
+
+        var data = {
+            id: $scope.user_accounts[index].id,
+            _caller: 'delete'
+        };
+
+        $http.post('admin/authenticate_user.php', data).success(function(data){
+
+            if (data.success) {
+                $scope.message = examListsFactory().messageSuccess('Successfully Deleted !');
+            } else {
+                $scope.message = examListsFactory().messageError();
+                console.log(data);
+            }
+
+        }).error(function(err){
+
+        });
+
+
+
+    };
+
+
+    $scope.updateProfile = function(){
+
+        var formData = {
+            _caller: 'update_profile',
+            id: examListsFactory().getCookieData().userId,
+            name: $scope.profileData.name,
+            email: $scope.profileData.email,
+            phone: $scope.profileData.phone,
+            psw: ($scope.profileData.psw.length > 0) ? $scope.profileData.psw: ''
+
+        };
+
+        console.log($scope.profileData.psw);
+
+        $http.post('admin/authenticate_user.php', formData).success(function(data){
+
+            if (data.success) {
+                $scope.message = examListsFactory().messageSuccess('Successfully Updated !');
+            } else {
+                $scope.message = examListsFactory().messageError();
+                console.log(data);
+            }
+
+        }).error(function(err){
+
+        });
+
+
+    }
+
+
+}]);
+
+
+
+
 
 app.controller('sidebarController', ["$scope", "examListsFactory",
     function($scope, examListsFactory){
@@ -1241,10 +1134,10 @@ app.config(function($routeProvider){
         controller: 'resultController'
     }).when('/dashboard/edit-profile', {
         templateUrl: 'admin/edit-profile.html',
-        controller: 'examController'
+        controller: 'profileController'
     }).when('/admin/manage-user', {
         templateUrl: 'admin/manage-user.html',
-        controller: 'examController'
+        controller: 'userController'
     });
 
 });

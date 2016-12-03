@@ -13,6 +13,31 @@ class User extends MysqlConnection
 
     protected $table = "users";
 
+    public function allAccounts(){
+        return $this->getAll($this->table);
+    }
+
+
+    public function getProfileData($id){
+        return $this->get($id, $this->table);
+    }
+
+
+    public function update($id, $data_arr){
+
+        return $this->updateRow($id, $data_arr, $this->table);
+
+    }
+
+
+    public function destroy($id){
+
+        return $this->delete($id, $this->table);
+
+    }
+    
+    
+
     public function login($login_credentials){
 
         $user_email = addslashes($login_credentials['user_email']);
@@ -69,6 +94,7 @@ class User extends MysqlConnection
 
 /*
 $user = new User();
+var_dump($user->getUserData(2));
 
 $user_info = [
     'name' => 'Golam Kibrea',

@@ -10,23 +10,26 @@
     <!-- /sidebar -->
     <!-- main-content -->
 
-    <div class="col-sm-9 main-content" > <!--ng-controller="resultArea" -->
+    <div class="col-sm-9 main-content" >
 
 
         <div class="box-title">
             <span class="headline">Edit Profile</span>
+
+            <span class="pull-right" ng-include="'admin/action-message.html'"></span>
+
         </div>
         <div class="clearfix"></div>
         <hr class="alt">
         <div class="clearfix"></div>
 
-                <form class="form-horizontal" ng-submit="register();">
+                <form class="form-horizontal" ng-submit="updateProfile();">
 
                     <div class="form-group">
                         <label class="col-sm-2">Name:</label>
 
                         <div class="col-sm-6">
-                            <input  type="text" ng-model="user.name" name="username" class="form-control" placeholder="Jhon Doe" />
+                            <input  type="text" ng-model="profileData.name" value="{{ profileData.name }}" name="username" class="form-control" placeholder="Jhon Doe" />
                         </div>
 
                     </div>
@@ -37,7 +40,7 @@
                         <label class="col-sm-2">Email:</label>
 
                         <div class="col-sm-6">
-                            <input  type="email" ng-model="user.email"  name="email" class="form-control" placeholder="jhon@doe.com" />
+                            <input  type="email" ng-model="profileData.email"  value="{{ profileData.email }}"   name="email" class="form-control" placeholder="jhon@doe.com" />
                         </div>
 
                     </div>
@@ -48,7 +51,7 @@
                         <label class="col-sm-2">Contact No:</label>
 
                         <div class="col-sm-6">
-                            <input  type="text" ng-model="user.phone" name="phone" class="form-control" placeholder="01672316448" />
+                            <input  type="text" ng-model="profileData.phone" value="{{ profileData.phone }}"  name="phone" class="form-control" placeholder="01672316448" />
                         </div>
 
                     </div>
@@ -59,7 +62,7 @@
                         <label class="col-sm-2">Password:</label>
 
                         <div class="col-sm-6">
-                            <input  type="password" name="password" ng-model="user.password"  class="form-control" placeholder="your password" />
+                            <input  type="password" name="password" ng-model="profileData.psw"  class="form-control" placeholder="New password" />
                         </div>
 
                     </div>

@@ -58,17 +58,16 @@ if( isset($_POST['_caller']) && $_POST['_caller'] == 'insert'){
 }
 
 
-exit("From Outer Block");
 
-/*
+// Get Profile Data Of A User
 
-// DELETE A SUBJECT RECORDS
+if(isset($_POST['_caller']) && $_POST['_caller'] == 'user_profile'){
 
-if(isset($_POST['_caller']) && $_POST['_caller'] == 'delete'){
+    $profile_data = $user->getProfileData($_POST['id']);
 
-    if($subjects->destroy($_POST['id'])){
+    if($profile_data){
 
-        exit(json_encode(['success' => TRUE]));
+        exit(json_encode(['success' => TRUE, 'profile_data' => $profile_data]));
 
     }
 
@@ -76,20 +75,30 @@ if(isset($_POST['_caller']) && $_POST['_caller'] == 'delete'){
 
 
 }
+
+
+//exit("From Outer Block");
+
 
 // UPDATE AN EXISTING SUBJECT RECORDS
 
-if(isset($_POST['_caller']) && $_POST['_caller'] == 'update'){
 
-    $subject = [
-        'title' => $_POST['title'],
-        'test_duration' => $_POST['test_duration'],
-        'scale' => $_POST['scale'],
-        'total_question' => $_POST['total_question'],
+if(isset($_POST['_caller']) && $_POST['_caller'] == 'update_profile'){
+
+    $profile_data = [
+        'name' => $_POST['name'],
+        'email' => $_POST['email'],
+        'phone' => $_POST['phone'],
         'updated_at' => $time = (new DateTime())->format('Y-m-d H:i:s')
     ];
 
-    if($subjects->update($_POST['id'], $subject)){
+    if(trim($_POST['psw']) != null && trim($_POST['psw']) != ''){
+
+        $profile_data['password'] = md5($_POST['psw']);
+
+    }
+
+    if($user->update($_POST['id'], $profile_data)){
 
         exit(json_encode(['success' => TRUE]));
 
@@ -100,10 +109,21 @@ if(isset($_POST['_caller']) && $_POST['_caller'] == 'update'){
 
 }
 
-exit($subjects->index());
+// DELETE AN ACCOUNT
 
-return $subjects->index();
+if(isset($_POST['_caller']) && $_POST['_caller'] == 'delete') {
 
-*/
+    if($user->destroy($_POST['id'])){
+        exit(json_encode(['success' => TRUE]));
+    }
+    
+    exit(json_encode(['success' => FALSE]));
+}
+
+exit(json_encode($user->allAccounts()));
+
+//return $subjects->index();
+
+
 
 //return $user->login();
