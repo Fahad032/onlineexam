@@ -1,5 +1,4 @@
-var app = angular.module('MyApp', ["ngRoute", "ngMessages"]);
-
+var app = angular.module('MyApp', ["ngCookies", "ngRoute", "ngMessages"]);
 
 
 /******************************************************/
@@ -7,11 +6,13 @@ var app = angular.module('MyApp', ["ngRoute", "ngMessages"]);
 /******************************************************/
 
 
-app.factory('examListsFactory', ["$http", "$q", function ($http, $q) {
+app.factory('examListsFactory', ["$cookies","$http", "$q", function ($cookies, $http, $q) {
 
     return function () {
 
         var defObj = $q.defer();
+
+        var loggedInUser = {};
 
         $http.get('admin/subject_management.php').success(function (data) {
 
@@ -33,7 +34,6 @@ app.factory('examListsFactory', ["$http", "$q", function ($http, $q) {
             /******************************************************/
             /*	SOME HELPER FUNCTION  */
             /******************************************************/
-
             defObj: defObj.promise,
 
             message: {
@@ -43,6 +43,29 @@ app.factory('examListsFactory', ["$http", "$q", function ($http, $q) {
 
             },
 
+            setCookieData: function(username, userId, isAdmin) {
+                userName = username;
+                $cookies.put("userName", username);
+                $cookies.put("userId", userId);
+                $cookies.put("isAdmin", isAdmin);
+            },
+            getCookieData: function() {
+                loggedInUser = {
+                    userName: $cookies.get("userName"),
+                    userId: $cookies.get("userId"),
+                    isAdmin: $cookies.get("isAdmin")
+                };
+                return loggedInUser;
+            },
+            clearCookieData: function() {
+                var userName = "";
+                var userId = "";
+                var isAdmin = "";
+                $cookies.remove("userName");
+                $cookies.remove("userId");
+                $cookies.remove("isAdmin");
+            },
+
             isLoggedIn: false,
             isAdmin: false,
             isUser: false,
@@ -50,7 +73,8 @@ app.factory('examListsFactory', ["$http", "$q", function ($http, $q) {
 
 
         loggedInUser: {
-                username: ''
+                username: '',
+                userId: 0
             },
 
             messageSuccess: function (successMessage) {
@@ -88,8 +112,10 @@ app.filter('filterById', function(){
 
 
 
-app.controller('LoginRegisterController', ["$scope","$http","$location","examListsFactory", function($scope, $http, $location, examListsFactory){
+app.controller('LoginRegisterController', ["$rootScope", "$scope","$http","$location","examListsFactory", function($rootScope, $scope, $http, $location, examListsFactory){
 
+
+    $rootScope.loggedInUser = {};
 
     $scope.loginFailed = false;
     $scope.isRegisterSuccess = examListsFactory.isRegisterSuccess;
@@ -112,6 +138,27 @@ app.controller('LoginRegisterController', ["$scope","$http","$location","examLis
                 console.log(data.data.role);
                 examListsFactory().isLoggedIn = true;
                 examListsFactory().loggedInUser.username = data.data.name;
+                examListsFactory().loggedInUser.userId = data.data.id
+
+
+                // or rootScope approach
+
+                $rootScope.isLoggedIn = true;
+                $rootScope.loggedInUser.username = data.data.name;
+                $rootScope.loggedInUser.userId = data.data.id;
+
+                console.log($rootScope.loggedInUser.userId);
+
+                // lets set it in the cookie
+
+                var isAdmin = false;
+
+                if(data.data.role.toLowerCase() == 'admin'){
+                    isAdmin = true;
+                }
+
+                examListsFactory().setCookieData(data.data.name, data.data.id, isAdmin);
+
 
                 if(data.data.role.toLowerCase() == 'admin'){
                      $location.path('admin/subject-management');
@@ -135,8 +182,15 @@ app.controller('LoginRegisterController', ["$scope","$http","$location","examLis
 
 
     };
-    
-    
+
+    $scope.logout = function(){
+
+        examListsFactory().clearCookieData();
+        examListsFactory().isLoggedIn = false;
+
+    };
+
+
     $scope.register = function(){
         var user_data = {
             _caller: 'insert',
@@ -676,10 +730,22 @@ app.controller("AnswerOptions", ["$scope", "$http", "$q", "$routeParams", "examL
 /*	Exam Controller */
 /******************************************************/
 
-app.controller('examController', ["$scope", "$http", "$q", "$routeParams", "examListsFactory", "$filter", "$timeout",
-    function($scope, $http, $q, $routeParams, examListsFactory, $filter, $timeout){
+app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$routeParams", "examListsFactory", "$filter", "$timeout", "$location",
+    function($rootScope, $scope, $http, $q, $routeParams, examListsFactory, $filter, $timeout, $location){
+
+        //console.log(examListsFactory().loggedInUser.userId);
+        //console.log($rootScope.loggedInUser);
 
         $scope.subjectId = $routeParams.subjectId;
+        $scope.testData = {
+            testId: 0,
+            score: 0,
+            total_correct_answer: 0,
+            total_wrong_answer: 0,
+            user_id: 0
+        };
+
+
 
         var subjectLists = examListsFactory().defObj;
         $scope.subjects = subjectLists.then(function (output) {
@@ -791,6 +857,39 @@ app.controller('examController', ["$scope", "$http", "$q", "$routeParams", "exam
         ];
 */
 
+
+        var startTest = function(){
+
+            console.log(examListsFactory().getCookieData().userId);
+            console.log('startTest Fired : ' +(new Date()).getMilliseconds());
+
+            var testData = {
+                user_id: examListsFactory().getCookieData().userId,
+                subject_id: $routeParams.subjectId,
+                score:0,
+                _caller: 'insert'
+            };
+
+            $http.post('examinee/exam_management.php', testData).success(function(data){
+
+                if(data.success){
+                    $scope.testData.testId = data.id;
+                    console.log(data.success);
+
+                }
+
+               // console.log(data);
+
+            }).error(function(err){
+                console.log(err);
+            });
+
+        };
+
+         if($scope.testData.testId === 0){
+//             startTest();
+         }
+
         var current_index = 0;
         $scope.time_count = 1;
 
@@ -812,24 +911,35 @@ app.controller('examController', ["$scope", "$http", "$q", "$routeParams", "exam
         };
 
         var showQuestion = function(){
-            
+
             if(current_index < questionAnswer.length){
 
                 $scope.current_question = questionAnswer[current_index];
                 $scope.question = $scope.current_question[0].title;
-                current_index = current_index + 1;
 
-                console.log($scope.question);
 
-                var promise = $timeout(showQuestion,  1000*60);
+                $scope.promise = $timeout(showQuestion,  1000*60);
 
                 showTimeCount();
 
-                if(current_index == questionAnswer.length){
-                    $timeout.cancel(promise);
-                }
+               // console.log($scope.question);
+              current_index = current_index + 1;
 
 
+                //if(current_index == questionAnswer.length){
+
+                   // $timeout.cancel(promise);
+                   // showQuestion(); // to fire the else statement
+
+
+                //}
+
+
+            }else{
+
+                // if the last question has already shown
+                $timeout.cancel($scope.promise);
+                $location.path('/dashboard/my-result');
 
             }
         };
@@ -837,7 +947,7 @@ app.controller('examController', ["$scope", "$http", "$q", "$routeParams", "exam
 
 
 
-        $http.post('admin/question_management', {subject_id:$scope.subjectId}).success(function(data){
+        $http.post('admin/question_management.php', {subject_id:$scope.subjectId}).success(function(data){
 
             $scope.questionsList = data;
 
@@ -882,7 +992,7 @@ app.controller('examController', ["$scope", "$http", "$q", "$routeParams", "exam
 
 
 
-                
+
 
               //  console.log(key + ' : ' + value.id);
 
@@ -962,13 +1072,43 @@ app.controller('examController', ["$scope", "$http", "$q", "$routeParams", "exam
 
         $scope.questions = exam_questions;
         var questionAnswer = $scope.question_answer_options;
-        console.log($scope.question_answer_options);
+        //console.log($scope.question_answer_options);
 
 
         $timeout(showQuestion, 1200);
 
+        $scope.reply = {
+            givenAnswer: 0
+        };
+
+        $scope.answered = function(){
 
 
+            $scope.testData._caller = 'update';
+
+            if($scope.reply.givenAnswer == 1){
+                $scope.testData.total_correct_answer = $scope.testData.total_correct_answer+1;
+               // $scope.testData.score =  $scope.testData.score+1;
+
+            }else{
+                $scope.testData.total_wrong_answer = $scope.testData.total_wrong_answer+1;
+
+            }
+
+            $http.post('examinee/exam_management.php', $scope.testData).success(function(data){
+
+                showQuestion();
+
+             //   console.log(data);
+
+            }).error(function(err){
+               console.log(err);
+
+            });
+
+            console.log($scope.reply.givenAnswer);
+
+        };
 
 
 
@@ -1009,6 +1149,55 @@ app.controller('examController', ["$scope", "$http", "$q", "$routeParams", "exam
 
         }]);
 
+
+    app.controller('resultController', ["$rootScope", "$scope", "$http", "examListsFactory", "$q",
+        function($rootScope, $scope, $http, examListsFactory, $q){
+
+            // will get the results list from database
+            $scope.results = [];
+
+           // var defObj = $q.defer();
+
+        $http.post('examinee/my_results.php', {_caller: 'get_results', user_id: examListsFactory().getCookieData().userId})
+            .success(function(data){
+
+
+                console.log(data);
+
+                $scope.results = data;
+                /*
+
+                if(data.length > 0){
+                    $scope.results = data;
+                }
+
+                defObj.resolve({
+                    data:data
+                });
+
+                */
+
+
+
+                //var subjectLists = examListsFactory().defObj;
+                //$scope.subjects = subjectLists.then(function (output) {
+                //    $scope.subject = $filter('filterById')(output.subjects, subjectId);
+                //});
+
+        }).error(function(err){
+           console.log(err);
+        });
+
+    }]);
+
+app.controller('sidebarController', ["$scope", "examListsFactory",
+    function($scope, examListsFactory){
+
+        $scope.username =  examListsFactory().getCookieData().userName;  //examListsFactory().getCookieData().userName;
+
+        console.log(examListsFactory().getCookieData().userName);
+    }]);
+
 /******************************************************/
 /*	Custom Route Definition */
 /******************************************************/
@@ -1046,6 +1235,15 @@ app.config(function($routeProvider){
         controller: 'subjectArea'
     }).when('/dashboard/:subjectId/exam', {
         templateUrl: 'examinee/exam.html',
+        controller: 'examController'
+    }).when('/dashboard/my-result', {
+        templateUrl: 'examinee/my-results.html',
+        controller: 'resultController'
+    }).when('/dashboard/edit-profile', {
+        templateUrl: 'admin/edit-profile.html',
+        controller: 'examController'
+    }).when('/admin/manage-user', {
+        templateUrl: 'admin/manage-user.html',
         controller: 'examController'
     });
 

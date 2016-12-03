@@ -1,0 +1,87 @@
+
+<!-- dashboard -->
+<div class="row dashboard">
+    <!-- dashboard-header -->
+    <div ng-include="'partials/header.html'"></div>
+    <!-- /dashboard-header -->
+    <div class="clearfix"></div>
+    <!-- sidebar-content -->
+    <div ng-include="'examinee/partials/sidebar.html'"></div>
+    <!-- /sidebar -->
+    <!-- main-content -->
+
+    <div class="col-sm-9 main-content" > <!--ng-controller="resultArea" -->
+
+
+        <div class="box-title">
+            <span class="headline">Edit Profile</span>
+        </div>
+        <div class="clearfix"></div>
+        <hr class="alt">
+        <div class="clearfix"></div>
+
+                <form class="form-horizontal" ng-submit="register();">
+
+                    <div class="form-group">
+                        <label class="col-sm-2">Name:</label>
+
+                        <div class="col-sm-6">
+                            <input  type="text" ng-model="user.name" name="username" class="form-control" placeholder="Jhon Doe" />
+                        </div>
+
+                    </div>
+                    <div class="clearfix"></div>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2">Email:</label>
+
+                        <div class="col-sm-6">
+                            <input  type="email" ng-model="user.email"  name="email" class="form-control" placeholder="jhon@doe.com" />
+                        </div>
+
+                    </div>
+                    <div class="clearfix"></div>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2">Contact No:</label>
+
+                        <div class="col-sm-6">
+                            <input  type="text" ng-model="user.phone" name="phone" class="form-control" placeholder="01672316448" />
+                        </div>
+
+                    </div>
+                    <div class="clearfix"></div>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2">Password:</label>
+
+                        <div class="col-sm-6">
+                            <input  type="password" name="password" ng-model="user.password"  class="form-control" placeholder="your password" />
+                        </div>
+
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <div class="form-group">
+                        <div class="col-sm-10 col-sm-offset-2">
+                            <button  type="submit" class="btn btn-primary" >Update Profile Info</button>
+                        </div>
+
+                    </div>
+                    <div class="clearfix"></div>
+
+                </form>
+
+    </div>
+    <!-- /main-content -->
+    <div class="clearfix"></div>
+
+    <footer ng-include="'partials/footer.html'">
+    </footer>
+
+</div>
+<!-- /dashboard -->
+<div class="clearfix"></div>

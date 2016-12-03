@@ -25,10 +25,10 @@
 
             <h4>{{ question }} {{ exam_question_id }} </h4>
 
-            <form action="#" class="form-horizontal">
+            <form method="post" class="form-horizontal" ng-submit="answered();">
 
                 <ul class="question">
-                    <li class="radio" ng-repeat="answer in current_question"> <label><input type="radio" class="form-radio" name="question-ID"> {{ answer.details }} </label> </li>
+                    <li class="radio" ng-repeat="answer in current_question"> <label><input type="radio" ng-model="reply.givenAnswer" value="{{answer.correct}}" class="form-radio" name="question-ID"> {{ answer.details }} </label> </li>
                 </ul>
                 <div class="clearfix"></div>
                 <div class="form-group">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
 
-                <pre>{{ current_question | json}}</pre>
+                    <pre>{{ current_question | json}}</pre>
               <!--  <pre>{{ question_answer_options | json }}</pre> -->
 
             </form>

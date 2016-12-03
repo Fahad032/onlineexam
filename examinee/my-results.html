@@ -1,0 +1,64 @@
+
+<!-- dashboard -->
+<div class="row dashboard">
+    <!-- dashboard-header -->
+    <div ng-include="'partials/header.html'"></div>
+    <!-- /dashboard-header -->
+    <div class="clearfix"></div>
+    <!-- sidebar-content -->
+    <div ng-include="'examinee/partials/sidebar.html'"></div>
+    <!-- /sidebar -->
+    <!-- main-content -->
+
+    <div class="col-sm-9 main-content" ng-controller="resultController" >
+
+
+        <div class="box-title">
+            <span class="headline">My Results</span>
+        </div>
+        <div class="clearfix"></div>
+        <hr class="alt">
+        <div class="clearfix"></div>
+
+
+        <table class="table table-condensed table-responsive table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Sl. No</th>
+                <th>Subject</th>
+                <th>GPA</th>
+                <th>Status</th>
+                <th>Date  & Time</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+            <tr ng-if="results.length" ng-repeat="result in results">
+
+
+                <td>{{ $index+1 }}</td>
+                <td>{{ result.title }}</td>
+                <td>{{ result.total_correct_answer*result.scale/result.total_question }}</td>
+                <td ng-if=" (result.total_correct_answer*result.scale/result.total_question > 1) "><label class="label label-success"> Passed </label></td>
+                <td ng-if=" !(result.total_correct_answer*result.scale/result.total_question > 1) "><label class="label label-danger"> Failed </label></td>
+                <td>{{ result.updated_at }}</td>
+            </tr>
+            <tr ng-if="!results.length">
+                <td colspan="6" class="text-center text-muted"> ---- No Result Yet ---- </td>
+            </tr>
+
+            </tbody>
+        </table>
+
+
+    </div>
+    <!-- /main-content -->
+    <div class="clearfix"></div>
+
+    <footer ng-include="'partials/footer.html'">
+    </footer>
+
+</div>
+<!-- /dashboard -->
+<div class="clearfix"></div>

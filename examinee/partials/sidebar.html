@@ -1,10 +1,10 @@
-<div class="col-sm-3 sidebar relative">
+<div class="col-sm-3 sidebar relative" ng-controller="sidebarController">
     <div class="sidebar-content">
         <div class="user-icon">
             <div class="user-profile-img circle">
                 <span class="fa fa-user fa-2x"></span>
             </div>
-            <span class="user-name">Jhon Doe</span>
+            <span class="user-name"> {{ username }} <!--Jhon Doe--></span>
         </div>
         <div class="clearfix"></div>
 
@@ -15,7 +15,7 @@
         <ul class="sidebar-nav">
             <li><a href="#/dashboard/my-test"><span class="fa fa-book"></span> Subjects </a></li>
             <li><a href="#/dashboard/my-result"><span class="fa fa-signal"></span> My results</a></li>
-            <li><a href="#/edit-profile"><span class="fa fa-cogs"></span> Edit profile</a></li>
+            <li><a href="#/dashboard/edit-profile"><span class="fa fa-cogs"></span> Edit profile</a></li>
             <li><a href="#/logout"><span class="fa fa-sign-out"></span> Logout</a></li>
         </ul>
 
