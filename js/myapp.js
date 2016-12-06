@@ -772,6 +772,8 @@ app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$route
 
             $http.post('examinee/exam_management.php', testData).success(function(data){
 
+                console.log(data);
+
                 if(data.success){
                     $scope.testData.testId = data.id;
 
@@ -896,7 +898,6 @@ app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$route
             }
 
             $http.post('examinee/exam_management.php', $scope.testData).success(function(data){
-
 
                 showQuestion();
 

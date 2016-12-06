@@ -69,7 +69,7 @@ if(isset($_POST['_caller']) && $_POST['_caller'] == 'update'){
 
     $question = [
         'title' => $_POST['title'],
-        'updated_at' => (new DateTime())->format('Y-m-d H:i:s')
+        'updated_at' => $time = (new DateTime("now", new DateTimeZone('Asia/Dhaka')))->format('Y-m-d H:i:s')
     ];
 
     if($questions->update($_POST['id'], $question)){

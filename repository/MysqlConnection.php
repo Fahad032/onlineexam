@@ -104,7 +104,8 @@ class MysqlConnection
         //INSERT INTO user(name, email, password, contact_no, created_at, updated_at)
         // VALUES($name, $email, $password, $contact_no, $created_at, $updated_at);
 
-        $time = (new DateTime())->format('Y-m-d H:i:s') ;
+        //$time = (new DateTime())->format('Y-m-d H:i:s') ; //utc time
+        $time = (new DateTime("now", new DateTimeZone('Asia/Dhaka')))->format('Y-m-d H:i:s');
         $recordValue['created_at'] = $time;
 
         $cols = '';

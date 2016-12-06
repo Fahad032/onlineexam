@@ -58,7 +58,7 @@ if(isset($_POST['_caller']) && $_POST['_caller'] == 'update'){
         'test_duration' => $_POST['test_duration'],
         'scale' => $_POST['scale'],
         'total_question' => $_POST['total_question'],
-        'updated_at' => $time = (new DateTime())->format('Y-m-d H:i:s')
+        'updated_at' => $time = (new DateTime("now", new DateTimeZone('Asia/Dhaka')))->format('Y-m-d H:i:s')
     ];
 
     if($subjects->update($_POST['id'], $subject)){

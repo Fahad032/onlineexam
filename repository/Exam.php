@@ -103,6 +103,8 @@ class Exam extends MysqlConnection
 }
 
 /*
+echo (new DateTime("now", new DateTimeZone('Asia/Dhaka')))->format('Y-m-d H:i:s');
+
 $test = new Exam();
 
 $myTest = [

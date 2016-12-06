@@ -20,42 +20,46 @@
                         <hr class="alt">
                         <div class="clearfix"></div>
 
-                        <table class="table table-condensed table-responsive table-bordered table-striped">
-                            <thead>
-                            <tr>
-                                <th>Sl. No</th>
-                                <th>Subject</th>
-                                <th>Scale</th>
-                                <th>Duration</th>
-                                <th>Total Question</th>
-                                <th colspan="2">Actions</th>
-                            </tr>
+                        <div class="table-responsive" style="max-height: calc(100vh - 361px); margin-bottom: 30px;  overflow-y: auto;">
+                            <table class="table table-condensed table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Sl. No</th>
+                                    <th>Subject</th>
+                                    <th>Scale</th>
+                                    <th>Duration</th>
+                                    <th>Total Question</th>
+                                    <th colspan="2">Actions</th>
+                                </tr>
 
-                            </thead>
+                                </thead>
 
-                            <tbody>
+                                <tbody>
 
-                            <tr ng-repeat="subject in subjects">
-                                <td>{{ $index+1 }}</td>
-                                <td><a href="#/admin/{{subject.id}}/question-management" title="Add Questions">{{ subject.title}}</a></td>
-                                <td>{{ subject.scale }}</td>
-                                <td>{{ subject.total_question }}</td>
-                                <td>{{ subject.test_duration }}</td>
-                                <td><a ng-click="editSubject($index);" class="edit-link text-primary"><label class="label label-info"><span class="fa fa-pencil"></span> Edit</label></a></td>
-                                <td><a ng-click="deleteSubject($index);" class="delete-link text-danger"><label class="label label-danger"><span class="fa fa-trash-o"></span> Delete</label></a></td>
-                            </tr>
+                                <tr ng-repeat="subject in subjects">
+                                    <td>{{ $index+1 }}</td>
+                                    <td><a href="#/admin/{{subject.id}}/question-management" title="Add Questions">{{ subject.title}}</a></td>
+                                    <td>{{ subject.scale }}</td>
+                                    <td>{{ subject.total_question }}</td>
+                                    <td>{{ subject.test_duration }}</td>
+                                    <td><a ng-click="editSubject($index);" class="edit-link text-primary"><label class="label label-info"><span class="fa fa-pencil"></span> Edit</label></a></td>
+                                    <td><a ng-click="deleteSubject($index);" class="delete-link text-danger"><label class="label label-danger"><span class="fa fa-trash-o"></span> Delete</label></a></td>
+                                </tr>
 
-                            </tbody>
+                                </tbody>
 
-                            <tfoot>
-                            <tr>
-                                <td colspan="6">
-                                    <p>*note: Click on a subject to add some question on it.</p>
-                                </td>
-                            </tr>
-                            </tfoot>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="7">
+                                        <p>*note: Click on a subject to add some question on it.</p>
+                                    </td>
+                                </tr>
+                                </tfoot>
 
-                        </table>
+                            </table>
+                        </div>
+
+
 
 
                         <div class="clearfix"></div>

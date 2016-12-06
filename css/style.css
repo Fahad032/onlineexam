@@ -100,7 +100,7 @@ span.brand-title{
 /* sidebar */
 
 .sidebar{
-    min-height: 900px;
+    min-height: 545px;
     background: #0a0a0a;
     border-right: 1px solid #eee;
     padding-top: 15px;
@@ -161,7 +161,7 @@ ul.sidebar-nav li a .fa{
 /*main-content*/
 .main-content{
     background: #f7f7f7;
-    min-height: 900px;
+    min-height: 545px;
     padding-top: 15px;
     padding-bottom: 15px;
 }
@@ -230,5 +230,19 @@ a.edit-link .label, a.delete-link .label{
 #add_answer label, #edit_answer label{
     margin-left: 5px;
     margin-right: 10px;
+}
+
+
+
+/******************************************************/
+/*	CUSTOM MEDIA QUERY */
+/******************************************************/
+
+@media( max-width: 768px) {
+    .sidebar{
+        min-height: 1px;
+    }
+
+
 }
 

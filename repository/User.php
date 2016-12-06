@@ -47,7 +47,7 @@ class User extends MysqlConnection
                                        FROM `users` u
                                        JOIN  `role_user` ru ON u.`id` = ru.`user_id`
                                        JOIN `roles` r ON  ru.`role_id` = r.`id`
-                                       WHERE email = '{$user_email}'
+                                       WHERE email = '{$user_email}' && password = '{$psw}'
                                        ");
 
 

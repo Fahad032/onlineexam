@@ -20,13 +20,13 @@
         <hr class="alt">
         <div class="clearfix"></div>
 
-
+        <div class="table-responsive" style="max-height: calc(100vh - 220px); margin-bottom: 10px;  overflow-y: auto;">
         <table class="table table-condensed table-responsive table-bordered table-striped">
             <thead>
             <tr>
                 <th>Sl. No</th>
                 <th>Subject</th>
-                <th>GPA</th>
+                <th>Marks</th>
                 <th>Status</th>
                 <th>Date  & Time</th>
             </tr>
@@ -39,10 +39,10 @@
 
                 <td>{{ $index+1 }}</td>
                 <td>{{ result.title }}</td>
-                <td>{{ result.total_correct_answer*result.scale/result.total_question }}</td>
-                <td ng-if=" (result.total_correct_answer*result.scale/result.total_question > 1) "><label class="label label-success"> Passed </label></td>
+                <td>{{ result.total_correct_answer }}</td>
+                <td ng-if=" (result.total_correct_answer*100/result.total_question > 33) "><label class="label label-success"> Passed </label></td>
                 <td ng-if=" !(result.total_correct_answer*result.scale/result.total_question > 1) "><label class="label label-danger"> Failed </label></td>
-                <td>{{ result.updated_at }}</td>
+                <td>{{ result.created_at }}</td>
             </tr>
             <tr ng-if="!results.length">
                 <td colspan="6" class="text-center text-muted"> ---- No Result Yet ---- </td>
@@ -50,6 +50,8 @@
 
             </tbody>
         </table>
+
+            </div>
 
 
     </div>

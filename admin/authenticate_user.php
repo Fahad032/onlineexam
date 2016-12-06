@@ -89,7 +89,7 @@ if(isset($_POST['_caller']) && $_POST['_caller'] == 'update_profile'){
         'name' => $_POST['name'],
         'email' => $_POST['email'],
         'phone' => $_POST['phone'],
-        'updated_at' => $time = (new DateTime())->format('Y-m-d H:i:s')
+        'updated_at' => $time = (new DateTime("now", new DateTimeZone('Asia/Dhaka')))->format('Y-m-d H:i:s')
     ];
 
     if(trim($_POST['psw']) != null && trim($_POST['psw']) != ''){
