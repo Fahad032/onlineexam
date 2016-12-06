@@ -42,8 +42,28 @@ app.factory('examListsFactory', ["$cookies","$http", "$q", function ($cookies, $
                 text: ''
 
             },
+            authenticateUser: function(){
+              console.log("From authenticate user: " + this.getCookieData().userId);
+                if(this.getCookieData().userId){
+
+                  return true;
+
+              }
+
+                return false;
+            },
+
+            adminPermission: function(){
+
+                console.log("From admin permission func "+this.getCookieData().isAdmin);
+
+                return this.getCookieData().isAdmin;
+                //JSON.parse("true");
+            },
 
             setCookieData: function(username, userId, isAdmin) {
+
+                console.log("From set cookie: "+isAdmin);
                 userName = username;
                 $cookies.put("userName", username);
                 $cookies.put("userId", userId);
@@ -135,7 +155,7 @@ app.controller('LoginRegisterController', ["$rootScope", "$scope","$http","$loca
 
             if(data.success){
 
-                console.log(data.data.role);
+                //console.log(data.data.role);
                 examListsFactory().isLoggedIn = true;
                 examListsFactory().loggedInUser.username = data.data.name;
                 examListsFactory().loggedInUser.userId = data.data.id
@@ -147,33 +167,27 @@ app.controller('LoginRegisterController', ["$rootScope", "$scope","$http","$loca
                 $rootScope.loggedInUser.username = data.data.name;
                 $rootScope.loggedInUser.userId = data.data.id;
 
-                console.log($rootScope.loggedInUser.userId);
-
                 // lets set it in the cookie
 
                 var isAdmin = false;
 
-                if(data.data.role.toLowerCase() == 'admin'){
+                if(data.data.role.toLowerCase() === 'admin'){
                     isAdmin = true;
                 }
 
                 examListsFactory().setCookieData(data.data.name, data.data.id, isAdmin);
 
 
-                if(data.data.role.toLowerCase() == 'admin'){
+                if(data.data.role.toLowerCase() === 'admin'){
                      $location.path('admin/subject-management');
-                    examListsFactory.isAdmin = true;
                 }else{
                     $location.path('dashboard/my-test');
-                    examListsFactory.isUser = true;
                 }
 
             }else{
 
                 $scope.loginFailed = true;
             }
-           console.log(data);
-           // $location.path('admin/subject-management');
         }).error(function(err){
             console.log(err);
         });
@@ -183,13 +197,17 @@ app.controller('LoginRegisterController', ["$rootScope", "$scope","$http","$loca
 
     };
 
+    /*
     $scope.logout = function(){
 
         examListsFactory().clearCookieData();
-        examListsFactory().isLoggedIn = false;
+        $location.path('/logout');
+
+        //examListsFactory().isLoggedIn = false;
+
 
     };
-
+*/
 
     $scope.register = function(){
         var user_data = {
@@ -231,7 +249,7 @@ app.controller('LoginRegisterController', ["$rootScope", "$scope","$http","$loca
 /*	SubjectArea Controller */
 /******************************************************/
 
-app.controller('subjectArea',["$scope","$http", "$q", "examListsFactory", function($scope, $http, $q, examListsFactory){
+app.controller('subjectArea',["$scope","$http", "$q", "examListsFactory", "$location", function($scope, $http, $q, examListsFactory, $location){
 
     $scope.showEditForm = false;
     $scope.message = {
@@ -289,15 +307,9 @@ app.controller('subjectArea',["$scope","$http", "$q", "examListsFactory", functi
         console.log(error);
     });
 
-//    console.log(defObj.promise);
-
 
 
     /* Subjects functions */
-
-    $scope.abc = function(){
-        console.log('abc called');
-    }
 
     $scope.addSubject = function(){
 
@@ -363,7 +375,6 @@ app.controller('subjectArea',["$scope","$http", "$q", "examListsFactory", functi
                 $scope.showEditForm = false;
                 $scope.message = examListsFactory().messageSuccess('Successfully Updated !');
                 $scope.resetFormFields();
-                //$scope.resetFormFields();
 
             }else{
 
@@ -388,15 +399,11 @@ app.controller('subjectArea',["$scope","$http", "$q", "examListsFactory", functi
             _caller: 'delete'
         };
 
-        console.log($scope.subjects[$index].id);
-
         $http.post('admin/subject_management.php', deleteSubject).success(function(data){
 
             if(data.success){
 
                 $scope.subjects.splice($index, 1);
-              //  $scope.message.success = true;
-              //  $scope.message.text = "Successfully Deleted !";
 
                 $scope.message = examListsFactory().messageSuccess('Successfully Deleted !');
 
@@ -422,8 +429,6 @@ app.controller('QuestionArea', ["$scope", "$http", "$q", "$routeParams", "examLi
 
     function($scope, $http, $q, $routeParams, examListsFactory, $filter){
 
-
-        //console.log($routeParams.subjectId);
         var subjectId = $routeParams.subjectId;
 
         var subjectLists = examListsFactory().defObj;
@@ -733,9 +738,6 @@ app.controller("AnswerOptions", ["$scope", "$http", "$q", "$routeParams", "examL
 app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$routeParams", "examListsFactory", "$filter", "$timeout", "$location",
     function($rootScope, $scope, $http, $q, $routeParams, examListsFactory, $filter, $timeout, $location){
 
-        //console.log(examListsFactory().loggedInUser.userId);
-        //console.log($rootScope.loggedInUser);
-
         $scope.subjectId = $routeParams.subjectId;
         $scope.testData = {
             testId: 0,
@@ -774,8 +776,6 @@ app.controller('examController', ["$rootScope", "$scope", "$http", "$q", "$route
                     $scope.testData.testId = data.id;
 
                 }
-
-               // console.log(data);
 
             }).error(function(err){
                 console.log(err);
@@ -966,8 +966,6 @@ app.controller('profileController', ["$scope", "examListsFactory", "$http", func
 
         };
 
-        console.log($scope.profileData.psw);
-
         $http.post('admin/authenticate_user.php', formData).success(function(data){
 
             if (data.success) {
@@ -991,18 +989,6 @@ app.controller('profileController', ["$scope", "examListsFactory", "$http", func
 
 // user account management
 app.controller('userController', ["$scope", "examListsFactory", "$http", function($scope, examListsFactory, $http){
-
-/*    var postData = {
-        _caller: 'user_profile',
-        id: examListsFactory().getCookieData().userId
-    };
-    $scope.profileData = {
-        name: '',
-        email: '',
-        phone: '',
-        psw: ''
-    };
-*/
 
     $scope.user_accounts = [];
 
@@ -1048,6 +1034,12 @@ app.controller('userController', ["$scope", "examListsFactory", "$http", functio
 
     $scope.updateProfile = function(){
 
+        // check if the user is logged in
+        if((examListsFactory().authenticateUser() != true)){
+            $location.path('/login');
+        }
+
+
         var formData = {
             _caller: 'update_profile',
             id: examListsFactory().getCookieData().userId,
@@ -1086,9 +1078,8 @@ app.controller('userController', ["$scope", "examListsFactory", "$http", functio
 app.controller('sidebarController', ["$scope", "examListsFactory",
     function($scope, examListsFactory){
 
-        $scope.username =  examListsFactory().getCookieData().userName;  //examListsFactory().getCookieData().userName;
+        $scope.username =  examListsFactory().getCookieData().userName;
 
-        console.log(examListsFactory().getCookieData().userName);
     }]);
 
 /******************************************************/
@@ -1113,31 +1104,130 @@ app.config(function($routeProvider){
     }).when('/logout', {
         templateUrl: 'partials/login-form.html',
         controller: 'LoginRegisterController',
-        controllerAs: 'logCtrl'
+        controllerAs: 'logCtrl',
+        resolve:{
+            // ensure that we have destroyed current user cookie
+            "check": function(examListsFactory){
+                examListsFactory().clearCookieData();
+            }
+        }
     }).when('/admin/subject-management', {
         templateUrl: 'admin/add-subject.html',
-        controller: 'subjectArea'
+        controller: 'subjectArea',
+        resolve: {
+            "check": function(examListsFactory, $location){
+                // check if the user has admin access
+                if((examListsFactory().adminPermission()) != 'true'){
+                    $location.path('/login');
+                }
+
+            }
+        }
+
     }).when('/admin/:subjectId/question-management', {
         templateUrl: 'admin/add-question.html',
-        controller: 'QuestionArea'
+        controller: 'QuestionArea',
+        resolve: {
+            "check": function(examListsFactory, $location){
+                // check if the user has admin access
+                if((examListsFactory().adminPermission()) != 'true'){
+                    $location.path('/login');
+                }
+
+
+            }
+        }
     }).when('/admin/:questionId/answer-management', {
         templateUrl: 'admin/add-answer.html',
-        controller: 'AnswerOptions'
-    }).when('/dashboard/my-test', {
-            templateUrl: 'examinee/available-tests.html',
-        controller: 'subjectArea'
-    }).when('/dashboard/:subjectId/exam', {
-        templateUrl: 'examinee/exam.html',
-        controller: 'examController'
-    }).when('/dashboard/my-result', {
-        templateUrl: 'examinee/my-results.html',
-        controller: 'resultController'
-    }).when('/dashboard/edit-profile', {
-        templateUrl: 'admin/edit-profile.html',
-        controller: 'profileController'
+        controller: 'AnswerOptions',
+        resolve: {
+            "check": function(examListsFactory, $location){
+                // check if the user has admin access
+                if((examListsFactory().adminPermission()) != 'true'){
+                    $location.path('/login');
+                }
+
+            }
+        }
     }).when('/admin/manage-user', {
         templateUrl: 'admin/manage-user.html',
-        controller: 'userController'
+        controller: 'userController',
+        resolve: {
+            "check": function(examListsFactory, $location){
+                // check if the user has admin access
+                if((examListsFactory().adminPermission()) != 'true'){
+                    $location.path('/login');
+                }
+
+            }
+        }
+
+    }).when('/admin/edit-my-profile', {
+        templateUrl: 'admin/edit-profile.html',
+        controller: 'profileController',
+        resolve: {
+            "check": function (examListsFactory, $location, $rootScope) {
+                // check if the user has admin access
+                if((examListsFactory().adminPermission()) != 'true'){
+                    $location.path('/login');
+                }
+
+                $rootScope.admin_sidebar = true;
+
+            }
+        }
+    }).when('/dashboard/my-test', {
+            templateUrl: 'examinee/available-tests.html',
+        controller: 'subjectArea',
+        resolve: {
+            "check": function (examListsFactory, $location) {
+                console.log("From the resolve : "+examListsFactory().authenticateUser());
+                // check if the user is logged in
+                if (examListsFactory().authenticateUser() != true) {
+                    $location.path('/login');
+                }
+
+            }
+        }
+
+        }).when('/dashboard/:subjectId/exam', {
+        templateUrl: 'examinee/exam.html',
+        controller: 'examController',
+        resolve: {
+            "check": function (examListsFactory, $location) {
+                // check if the user is logged in
+                if (examListsFactory().authenticateUser() != true) {
+                    $location.path('/login');
+                }
+
+            }
+        }
+    }).when('/dashboard/my-result', {
+        templateUrl: 'examinee/my-results.html',
+        controller: 'resultController',
+        resolve: {
+            "check": function (examListsFactory, $location) {
+                // check if the user is logged in
+                if (examListsFactory().authenticateUser() != true){
+                    $location.path('/login');
+                }
+
+            }
+        }
+    }).when('/dashboard/edit-profile', {
+        templateUrl: 'admin/edit-profile.html',
+        controller: 'profileController',
+        resolve: {
+            "check": function (examListsFactory, $location, $rootScope) {
+                // check if the user is logged in
+                if (examListsFactory().authenticateUser() !=  true) {
+                    $location.path('/login');
+                }
+
+                $rootScope.admin_sidebar = false;
+
+            }
+        }
     });
 
 });

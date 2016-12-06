@@ -16,12 +16,16 @@ class Results extends MysqlConnection
 
     public function myResults($user_id){
 
-        $query = $this->mysqli->query("SELECT `ut`.*, `s`.* 
+        $query = $this->mysqli->query("SELECT `ut`.*, `s`.id as sub_id,
+                                          `s`.title,
+                                    `s`.scale,
+                                    `s`.total_question,
+                                    `s`.test_duration
+                                     
                                        FROM `user_test` ut
                                        JOIN  `subjects` s ON ut.`subject_id` = s.`id`
                                        WHERE user_id = '{$user_id}'
                                        ");
-
 
         if($query->num_rows > 0){
 

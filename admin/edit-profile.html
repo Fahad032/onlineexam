@@ -6,7 +6,8 @@
     <!-- /dashboard-header -->
     <div class="clearfix"></div>
     <!-- sidebar-content -->
-    <div ng-include="'examinee/partials/sidebar.html'"></div>
+    <div ng-if="admin_sidebar" ng-include="'admin/partials/admin-sidebar.html'"></div>
+    <div ng-if="!admin_sidebar" ng-include="'examinee/partials/sidebar.html'"></div>
     <!-- /sidebar -->
     <!-- main-content -->
 
